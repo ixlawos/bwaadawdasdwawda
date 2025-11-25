@@ -2,6 +2,7 @@ local Players           = game:GetService("Players")
 local TweenService      = game:GetService("TweenService")
 local UserInputService  = game:GetService("UserInputService")
 local RunService        = game:GetService("RunService")
+local Stats             = game:GetService("Stats")
 local player            = Players.LocalPlayer
 local playerGui         = player:WaitForChild("PlayerGui")
 
@@ -45,19 +46,38 @@ local main = new("Frame", {
     Parent = screenGui,
     Active = true
 })
-new("UICorner", {CornerRadius = UDim.new(0, 12), Parent = main})
+-- Mas pabilog na corner
+new("UICorner", {CornerRadius = UDim.new(0, 25), Parent = main})
 
--- Pink Stroke (GUI Border)
-new("UIStroke", {
+-- Pink Stroke (GUI Border / glow feel)
+local mainStroke = new("UIStroke", {
     Parent = main,
     Color = THEME.accentPink,
-    Thickness = 3,
-    Transparency = 0,
+    Thickness = 4,
+    Transparency = 0.15,
     ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 })
 
+-- Particle-like gradient effect sa loob ng GUI
+local particle = Instance.new("UIGradient")
+particle.Rotation = 0
+particle.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255,150,200)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255,60,150))
+}
+particle.Transparency = NumberSequence.new(0.85)
+particle.Parent = main
 
--- DRAGGABLE
+task.spawn(function()
+    while true do
+        for i = 0, 360, 1 do
+            particle.Rotation = i
+            task.wait(0.03)
+        end
+    end
+end)
+
+-- DRAGGABLE MAIN
 do
     local dragging = false
     local dragStart, startPos
@@ -110,6 +130,57 @@ clickSound.SoundId = "rbxassetid://5419098676"
 clickSound.Volume = 0.7
 clickSound.Parent = main
 
+-- Soft click helper
+local function playClickSound()
+    if clickSound then
+        pcall(function() clickSound:Play() end)
+    end
+end
+
+local function addSoftButtonFX(btn)
+    if not btn or not btn:IsA("GuiButton") then return end
+    local origSize = btn.Size
+    local origBg = btn.BackgroundColor3
+
+    btn.MouseEnter:Connect(function()
+        pcall(function()
+            TweenService:Create(
+                btn,
+                TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                {BackgroundColor3 = origBg:Lerp(Color3.fromRGB(255,255,255), 0.08)}
+            ):Play()
+        end)
+    end)
+
+    btn.MouseLeave:Connect(function()
+        pcall(function()
+            TweenService:Create(
+                btn,
+                TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                {BackgroundColor3 = origBg}
+            ):Play()
+        end)
+    end)
+
+    btn.MouseButton1Click:Connect(function()
+        playClickSound()
+        pcall(function()
+            TweenService:Create(
+                btn,
+                TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                {Size = origSize + UDim2.new(0,2,0,2)}
+            ):Play()
+            task.delay(0.08, function()
+                TweenService:Create(
+                    btn,
+                    TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                    {Size = origSize}
+                ):Play()
+            end)
+        end)
+    end)
+end
+
 -- Title (Centered)
 new("TextLabel", {
     Parent = main,
@@ -123,6 +194,170 @@ new("TextLabel", {
     TextColor3 = THEME.text,
     TextXAlignment = Enum.TextXAlignment.Center
 })
+
+----------------------------------------------------------------
+-- FPS + PING INDICATOR (TOP RIGHT)
+----------------------------------------------------------------
+local statsFrame = new("Frame", {
+    Parent = main,
+    AnchorPoint = Vector2.new(1,0),
+    Position = UDim2.new(1, -10, 0, 8),
+    Size = UDim2.new(0, 180, 0, 20),
+    BackgroundTransparency = 1
+})
+
+local fpsLabel = new("TextLabel", {
+    Parent = statsFrame,
+    Size = UDim2.new(0.55,0,1,0),
+    BackgroundTransparency = 1,
+    Font = Enum.Font.Gotham,
+    TextSize = 12,
+    TextColor3 = THEME.text,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    Text = "FPS: --"
+})
+
+local pingLabel = new("TextLabel", {
+    Parent = statsFrame,
+    Size = UDim2.new(0.45,0,1,0),
+    Position = UDim2.new(0.55,0,0,0),
+    BackgroundTransparency = 1,
+    Font = Enum.Font.Gotham,
+    TextSize = 12,
+    TextColor3 = THEME.text,
+    TextXAlignment = Enum.TextXAlignment.Right,
+    Text = "Ping: --"
+})
+
+local pingDot = new("Frame", {
+    Parent = statsFrame,
+    Size = UDim2.new(0,8,0,8),
+    Position = UDim2.new(0.55, -12, 0.5, -4),
+    BackgroundColor3 = Color3.fromRGB(128,128,128),
+    BorderSizePixel = 0
+})
+new("UICorner", {CornerRadius = UDim.new(1,0), Parent = pingDot})
+
+do
+    local frames = 0
+    local lastTime = tick()
+
+    RunService.RenderStepped:Connect(function()
+        frames += 1
+        local now = tick()
+        if now - lastTime >= 1 then
+            local fps = math.floor(frames / (now - lastTime) + 0.5)
+            frames = 0
+            lastTime = now
+            fpsLabel.Text = "FPS: "..tostring(fps)
+
+            local pingValue = "--"
+            local pingNumber
+            local pingStat = Stats.Network.ServerStatsItem["Data Ping"]
+            if pingStat then
+                pingNumber = math.floor(pingStat:GetValue())
+                pingValue = tostring(pingNumber).." ms"
+            end
+            pingLabel.Text = "Ping: "..pingValue
+
+            if pingNumber then
+                local col
+                if pingNumber <= 60 then
+                    col = Color3.fromRGB(0,255,0)
+                elseif pingNumber <= 120 then
+                    col = Color3.fromRGB(255,255,0)
+                else
+                    col = Color3.fromRGB(255,0,0)
+                end
+                pingDot.BackgroundColor3 = col
+            else
+                pingDot.BackgroundColor3 = Color3.fromRGB(128,128,128)
+            end
+        end
+    end)
+end
+
+----------------------------------------------------------------
+-- MINIMIZE BUTTON + MINI ICON
+----------------------------------------------------------------
+local minimized = false
+
+local miniIcon = new("TextButton", {
+    Parent = screenGui,
+    Size = UDim2.new(0, 40, 0, 40),
+    Position = UDim2.new(0, 20, 1, -80),
+    BackgroundColor3 = THEME.accentPink,
+    Text = "M",
+    Font = Enum.Font.GothamBold,
+    TextSize = 18,
+    TextColor3 = Color3.fromRGB(255,255,255),
+    Visible = false,
+    AutoButtonColor = true
+})
+new("UICorner", {CornerRadius = UDim.new(1,0), Parent = miniIcon})
+addSoftButtonFX(miniIcon)
+
+-- draggable mini icon
+do
+    local dragging = false
+    local dragStart, startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        miniIcon.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+
+    miniIcon.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = miniIcon.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    miniIcon.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+            update(input)
+        end
+    end)
+end
+
+local minimizeBtn = new("TextButton", {
+    Parent = main,
+    Size = UDim2.new(0,22,0,22),
+    Position = UDim2.new(1, -10, 0, 8),
+    AnchorPoint = Vector2.new(1,0),
+    BackgroundColor3 = THEME.bg,
+    Text = "–",
+    Font = Enum.Font.GothamBold,
+    TextSize = 16,
+    TextColor3 = THEME.text,
+    AutoButtonColor = true
+})
+new("UICorner", {CornerRadius = UDim.new(1,0), Parent = minimizeBtn})
+addSoftButtonFX(minimizeBtn)
+
+minimizeBtn.MouseButton1Click:Connect(function()
+    if minimized then return end
+    minimized = true
+    main.Visible = false
+    miniIcon.Visible = true
+end)
+
+miniIcon.MouseButton1Click:Connect(function()
+    minimized = false
+    main.Visible = true
+    miniIcon.Visible = false
+end)
 
 ----------------------------------------------------------------
 -- SIDEBAR (SCROLL)
@@ -192,7 +427,7 @@ local TabDefs = {
 }
 
 ----------------------------------------------------------------
--- TAB HELPERS
+-- TAB HELPERS + THEME SYSTEM
 ----------------------------------------------------------------
 local function getAccent()
     return THEME.accentPink
@@ -213,21 +448,88 @@ local function applyTabVisual(tabName, isActive)
     t.accent.Visible = isActive
 end
 
+-- theme data
+local themeDefs = {
+    Pink    = {accent = Color3.fromRGB(255,40,140)},
+    Purple  = {accent = Color3.fromRGB(180,80,255)},
+    Blue    = {accent = Color3.fromRGB(80,140,255)},
+    Red     = {accent = Color3.fromRGB(255,70,70)},
+    White   = {accent = Color3.fromRGB(255,255,255)},
+}
+local currentTheme = "Pink"
+local categoryObjects = {}
+local rainbowConnection = nil
+local themeInfoLabel = nil
+
+local function applyAccentColor(color)
+    THEME.accentPink = color
+    THEME.accentAlt  = color
+    if mainStroke then
+        mainStroke.Color = color
+    end
+    for _,obj in ipairs(categoryObjects) do
+        if obj.line then obj.line.BackgroundColor3 = color end
+        if obj.label then obj.label.TextColor3 = color end
+    end
+    for name, t in pairs(tabs) do
+        if t.accent then
+            t.accent.BackgroundColor3 = color
+        end
+    end
+end
+
+local function setTheme(name)
+    currentTheme = name
+    if rainbowConnection then
+        rainbowConnection:Disconnect()
+        rainbowConnection = nil
+    end
+
+    if name == "Rainbow" then
+        local h = 0
+        rainbowConnection = RunService.Heartbeat:Connect(function(dt)
+            h = (h + dt * 0.1) % 1
+            local c = Color3.fromHSV(h, 0.7, 1)
+            applyAccentColor(c)
+        end)
+    else
+        local def = themeDefs[name]
+        if def then
+            applyAccentColor(def.accent)
+        end
+    end
+
+    if themeInfoLabel then
+        themeInfoLabel.Text = "Theme: "..name
+    end
+end
+
 ----------------------------------------------------------------
--- CATEGORY LABELS (MALIIT + TRANSPARENT, PARANG NOTES)
+-- CATEGORY LABELS (LINE + PINK TEXT)
 ----------------------------------------------------------------
 local function createCategoryLabel(text)
+    -- pink line
+    local line = new("Frame", {
+        Parent = sidebar,
+        Size = UDim2.new(1, -10, 0, 2),
+        BackgroundColor3 = THEME.accentPink,
+        BorderSizePixel = 0
+    })
+    new("UICorner", {CornerRadius = UDim.new(0, 2), Parent = line})
+
+    -- category text
     local lbl = new("TextLabel", {
         Parent = sidebar,
-        Size = UDim2.new(1, 0, 0, 14),
+        Size = UDim2.new(1, 0, 0, 16),
         BackgroundTransparency = 1,
-        Text = "- "..text.." -",
-        Font = Enum.Font.Gotham,
-        TextSize = 10,                -- mas maliit
-        TextColor3 = THEME.text,
-        TextTransparency = 0.4,       -- subtle / transparent
-        TextXAlignment = Enum.TextXAlignment.Center
+        Text = text,
+        Font = Enum.Font.GothamBold,
+        TextSize = 12,
+        TextColor3 = THEME.accentPink,
+        TextXAlignment = Enum.TextXAlignment.Left
     })
+
+    table.insert(categoryObjects, {line = line, label = lbl})
     return lbl
 end
 
@@ -249,6 +551,7 @@ local function createTab(tabName, icon, category)
         TextXAlignment = Enum.TextXAlignment.Center, -- CENTERED TAB TEXT
     })
     new("UICorner", {CornerRadius = UDim.new(0, 6), Parent = btn})
+    addSoftButtonFX(btn)
 
     local accentBar = new("Frame", {
         Parent = btn,
@@ -300,10 +603,6 @@ local function createTab(tabName, icon, category)
         currentTab = tabName
         panel.Visible = true
         applyTabVisual(tabName, true)
-
-        if clickSound then
-            pcall(function() clickSound:Play() end)
-        end
     end)
 end
 
@@ -328,6 +627,9 @@ do
         applyTabVisual(first, true)
     end
 end
+
+-- apply default theme (pink)
+setTheme("Pink")
 
 ----------------------------------------------------------------
 -- GENERIC TOGGLE ROW FOR ANY TAB
@@ -405,9 +707,7 @@ local function addTabButton(tabName, text, callback)
     toggleBtn.MouseButton1Click:Connect(function()
         state = not state
         applyVisual()
-        if clickSound then
-            pcall(function() clickSound:Play() end)
-        end
+        playClickSound()
 
         if state then
             if callback then
@@ -16603,27 +16903,33 @@ end
 
 -- Teleport as soon as the character is fully loaded
 teleportToTarget()
-end)
+end) 
 
 ----------------------------------------------------------------
--- GLOBAL TOGGLE KEY (SHOW/HIDE GUI)
+-- GLOBAL TOGGLE KEY (SHOW/HIDE / UNMINIMIZE)
 ----------------------------------------------------------------
 local toggleKey = Enum.KeyCode.RightShift
 
 UserInputService.InputBegan:Connect(function(input, gpe)
     if gpe then return end
     if input.KeyCode == toggleKey then
-        main.Visible = not main.Visible
+        if minimized then
+            minimized = false
+            main.Visible = true
+            miniIcon.Visible = false
+        else
+            main.Visible = not main.Visible
+        end
     end
 end)
 
-
 ----------------------------------------------------------------
--- SETTINGS TAB: CHANGE TOGGLE KEY
+-- SETTINGS TAB: CHANGE TOGGLE KEY + THEME SELECTOR
 ----------------------------------------------------------------
 do
     local panel = allTabPanels["SETTINGS"]
     if panel then
+        -- TOGGLE KEY ROW
         local row = new("Frame", {
             Parent = panel,
             Size = UDim2.new(1, -16, 0, 40),
@@ -16664,10 +16970,11 @@ do
             TextColor3 = Color3.fromRGB(255,255,255)
         })
         new("UICorner", {CornerRadius = UDim.new(0,6), Parent = changeBtn})
+        addSoftButtonFX(changeBtn)
 
         changeBtn.MouseButton1Click:Connect(function()
             label.Text = "Press any key to set new toggle..."
-            if clickSound then pcall(function() clickSound:Play() end) end
+            playClickSound()
 
             local conn
             conn = UserInputService.InputBegan:Connect(function(inp, gpe)
@@ -16679,11 +16986,91 @@ do
                 end
             end)
         end)
+
+        -- THEME ROW
+        local themeRow = new("Frame", {
+            Parent = panel,
+            Size = UDim2.new(1, -16, 0, 70),
+            BackgroundColor3 = THEME.bg,
+            BorderSizePixel = 0
+        })
+        new("UICorner", {CornerRadius = UDim.new(0,6), Parent = themeRow})
+
+        new("UIPadding", {
+            Parent = themeRow,
+            PaddingLeft = UDim.new(0,10),
+            PaddingRight = UDim.new(0,10),
+            PaddingTop = UDim.new(0,6),
+            PaddingBottom = UDim.new(0,6)
+        })
+
+        local themeTitle = new("TextLabel", {
+            Parent = themeRow,
+            Size = UDim2.new(1, 0, 0, 18),
+            BackgroundTransparency = 1,
+            Text = "Theme Settings",
+            Font = Enum.Font.GothamSemibold,
+            TextSize = 14,
+            TextColor3 = THEME.text,
+            TextXAlignment = Enum.TextXAlignment.Left
+        })
+
+        themeInfoLabel = new("TextLabel", {
+            Parent = themeRow,
+            Size = UDim2.new(1, 0, 0, 16),
+            Position = UDim2.new(0,0,0,18),
+            BackgroundTransparency = 1,
+            Text = "Theme: "..currentTheme,
+            Font = Enum.Font.Gotham,
+            TextSize = 12,
+            TextColor3 = THEME.textSub,
+            TextXAlignment = Enum.TextXAlignment.Left
+        })
+
+        local themeButtonsFrame = new("Frame", {
+            Parent = themeRow,
+            Size = UDim2.new(1, 0, 0, 26),
+            Position = UDim2.new(0,0,0,40),
+            BackgroundTransparency = 1
+        })
+
+        local layout = new("UIListLayout", {
+            Parent = themeButtonsFrame,
+            FillDirection = Enum.FillDirection.Horizontal,
+            SortOrder = Enum.SortOrder.LayoutOrder,
+            Padding = UDim.new(0,6)
+        })
+
+        local function makeThemeBtn(name)
+            local b = new("TextButton", {
+                Parent = themeButtonsFrame,
+                Size = UDim2.new(0,80,1,0),
+                BackgroundColor3 = THEME.panelAlt,
+                AutoButtonColor = true,
+                Text = name,
+                Font = Enum.Font.GothamBold,
+                TextSize = 12,
+                TextColor3 = THEME.text
+            })
+            new("UICorner", {CornerRadius = UDim.new(0,6), Parent = b})
+            addSoftButtonFX(b)
+
+            b.MouseButton1Click:Connect(function()
+                setTheme(name)
+            end)
+        end
+
+        makeThemeBtn("Pink")
+        makeThemeBtn("Purple")
+        makeThemeBtn("Blue")
+        makeThemeBtn("Red")
+        makeThemeBtn("White")
+        makeThemeBtn("Rainbow")
     end
 end
 
 ----------------------------------------------------------------
--- WORLD TAB: PLAYER LIST + VIEW / UNVIEW / TELEPORT / BRING / UNBRING
+-- WORLD TAB: PLAYER LIST (FIXED)
 ----------------------------------------------------------------
 local function setupWorldTab()
     local panel = allTabPanels["WORLD"]
@@ -16701,42 +17088,74 @@ local function setupWorldTab()
         TextXAlignment = Enum.TextXAlignment.Left
     })
 
-    -- Container for player rows
-    local listFrame = new("Frame", {
+    -- Search bar
+    local searchBox = new("TextBox", {
+        Parent = panel,
+        Size = UDim2.new(1, -16, 0, 26),
+        BackgroundColor3 = THEME.panelAlt,
+        BorderSizePixel = 0,
+        ClearTextOnFocus = false,
+        PlaceholderText = "Search player...",
+        Text = "",
+        Font = Enum.Font.Gotham,
+        TextSize = 12,
+        TextColor3 = THEME.text,
+        TextXAlignment = Enum.TextXAlignment.Left
+    })
+    new("UICorner", {CornerRadius = UDim.new(0,6), Parent = searchBox})
+    new("UIPadding", {Parent = searchBox, PaddingLeft = UDim.new(0,8)})
+
+    -- FIX: INTERNAL HOLDER (no scroll conflict)
+    local holder = new("Frame", {
         Parent = panel,
         Size = UDim2.new(1, -16, 0, 260),
+        BackgroundTransparency = 1
+    })
+
+    -- FIX: ACTUAL SCROLLINGFRAME (works properly)
+    local listFrame = new("ScrollingFrame", {
+        Parent = holder,
+        Size = UDim2.new(1, 0, 1, 0),
         BackgroundColor3 = THEME.bg,
-        BorderSizePixel = 0
+        BorderSizePixel = 0,
+        ScrollBarThickness = 4,
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+        CanvasSize = UDim2.new(0,0,0,0)
     })
     new("UICorner", {CornerRadius = UDim.new(0,6), Parent = listFrame})
 
     new("UIPadding", {
         Parent = listFrame,
-        PaddingLeft = UDim.new(0,6),
-        PaddingRight = UDim.new(0,6),
-        PaddingTop = UDim.new(0,6),
-        PaddingBottom = UDim.new(0,6)
+        PaddingLeft = UDim2.new(0,6),
+        PaddingRight = UDim2.new(0,6),
+        PaddingTop = UDim2.new(0,6),
+        PaddingBottom = UDim2.new(0,6)
     })
 
     local listLayout = new("UIListLayout", {
         Parent = listFrame,
+        Padding = UDim.new(0,4),
         FillDirection = Enum.FillDirection.Vertical,
-        SortOrder = Enum.SortOrder.LayoutOrder,
-        Padding = UDim.new(0,4)
+        SortOrder = Enum.SortOrder.LayoutOrder
     })
 
+    local playerRows = {}
+
+    -- CREATE ROW
     local function createPlayerRow(plr)
         local row = new("Frame", {
             Parent = listFrame,
-            Size = UDim2.new(1, 0, 0, 34),
+            Size = UDim2.new(1, 0, 0, 36),
             BackgroundColor3 = THEME.panelAlt,
             BorderSizePixel = 0
         })
         new("UICorner", {CornerRadius = UDim.new(0,6), Parent = row})
 
-        local nameLabel = new("TextLabel", {
+        playerRows[row] = plr.Name
+
+        new("TextLabel", {
             Parent = row,
-            Size = UDim2.new(0.25,0,1,0),
+            Size = UDim2.new(0.26, 0, 1, 0),
             BackgroundTransparency = 1,
             Text = plr.Name,
             Font = Enum.Font.Gotham,
@@ -16745,79 +17164,72 @@ local function setupWorldTab()
             TextXAlignment = Enum.TextXAlignment.Left
         })
 
-        local function makeBtn(txt, order, callback)
+        local function makeBtn(txt, pos, callback)
             local b = new("TextButton", {
                 Parent = row,
-                Size = UDim2.new(0.13,0,0,26),
-                Position = UDim2.new(0.26 + (order * 0.15),0,0.5,-13),
+                Size = UDim2.new(0,60,0,24),
+                Position = UDim2.new(pos,0,0.5,-12),
                 BackgroundColor3 = THEME.bg,
-                AutoButtonColor = true,
                 Text = txt,
                 Font = Enum.Font.GothamSemibold,
                 TextSize = 12,
                 TextColor3 = THEME.text
             })
             new("UICorner", {CornerRadius = UDim.new(0,4), Parent = b})
-
-            b.MouseButton1Click:Connect(function()
-                if clickSound then pcall(function() clickSound:Play() end) end
-                pcall(callback)
-            end)
+            b.MouseButton1Click:Connect(callback)
         end
 
-        -- VIEW
-        makeBtn("VIEW", 0, function()
+        makeBtn("VIEW",   0.30, function()
             if plr.Character and plr.Character:FindFirstChild("Humanoid") then
                 workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
             end
         end)
 
-        -- UNVIEW
-        makeBtn("UNVIEW", 1, function()
+        makeBtn("UNVIEW", 0.44, function()
             if player.Character and player.Character:FindFirstChild("Humanoid") then
                 workspace.CurrentCamera.CameraSubject = player.Character.Humanoid
             end
         end)
 
-        -- TELEPORT
-        makeBtn("TP", 2, function()
-            if player.Character and plr.Character then
-                local hrp1 = player.Character:FindFirstChild("HumanoidRootPart")
-                local hrp2 = plr.Character:FindFirstChild("HumanoidRootPart")
-                if hrp1 and hrp2 then
-                    hrp1.CFrame = hrp2.CFrame + Vector3.new(0,2,0)
-                end
-            end
+        makeBtn("TP",     0.58, function()
+            local hrp1 = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+            local hrp2 = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+            if hrp1 and hrp2 then hrp1.CFrame = hrp2.CFrame + Vector3.new(0,2,0) end
         end)
 
-        -- BRING
-        makeBtn("BRING", 3, function()
-            if player.Character and plr.Character then
-                local hrp1 = player.Character:FindFirstChild("HumanoidRootPart")
-                local hrp2 = plr.Character:FindFirstChild("HumanoidRootPart")
-                if hrp1 and hrp2 then
-                    hrp2.CFrame = hrp1.CFrame + Vector3.new(0,2,0)
-                end
-            end
+        makeBtn("BRING",  0.72, function()
+            local hrp1 = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+            local hrp2 = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+            if hrp1 and hrp2 then hrp2.CFrame = hrp1.CFrame + Vector3.new(0,2,0) end
         end)
 
-        -- UNBRING (simple respawn)
-        makeBtn("UNBRING", 4, function()
+        makeBtn("RESET",  0.86, function()
             plr:LoadCharacter()
         end)
     end
 
+    -- FILTERING FIX
+    local function applySearch()
+        local query = string.lower(searchBox.Text)
+        for row, name in pairs(playerRows) do
+            row.Visible = (query == "" or string.find(string.lower(name), query, 1, true))
+        end
+    end
+    searchBox:GetPropertyChangedSignal("Text"):Connect(applySearch)
+
+    -- REFRESH FIXED
     local function refreshList()
         for _,child in ipairs(listFrame:GetChildren()) do
-            if child:IsA("Frame") then
-                child:Destroy()
-            end
+            if child:IsA("Frame") then child:Destroy() end
         end
+        playerRows = {}
         for _,plr in ipairs(Players:GetPlayers()) do
             if plr ~= player then
                 createPlayerRow(plr)
             end
         end
+        task.wait(0.05)
+        applySearch()
     end
 
     refreshList()
@@ -16825,7 +17237,9 @@ local function setupWorldTab()
     Players.PlayerAdded:Connect(refreshList)
     Players.PlayerRemoving:Connect(refreshList)
 
-    -- Manual refresh button
+    -- Lower refresh button
+    new("Frame", {Parent = panel, Size = UDim2.new(1,0,0,8), BackgroundTransparency = 1})
+
     local refreshBtn = new("TextButton", {
         Parent = panel,
         Size = UDim2.new(0,120,0,30),
@@ -16837,10 +17251,7 @@ local function setupWorldTab()
     })
     new("UICorner", {CornerRadius = UDim.new(0,6), Parent = refreshBtn})
 
-    refreshBtn.MouseButton1Click:Connect(function()
-        if clickSound then pcall(function() clickSound:Play() end) end
-        refreshList()
-    end)
+    refreshBtn.MouseButton1Click:Connect(refreshList)
 end
 
 setupWorldTab()
@@ -16895,6 +17306,7 @@ local function setupLuaExecutor()
         TextColor3 = Color3.fromRGB(255,255,255)
     })
     new("UICorner", {CornerRadius = UDim.new(0,6), Parent = execBtn})
+    addSoftButtonFX(execBtn)
 
     local clearBtn = new("TextButton", {
         Parent = btnRow,
@@ -16907,9 +17319,9 @@ local function setupLuaExecutor()
         TextColor3 = THEME.text
     })
     new("UICorner", {CornerRadius = UDim.new(0,6), Parent = clearBtn})
+    addSoftButtonFX(clearBtn)
 
     execBtn.MouseButton1Click:Connect(function()
-        if clickSound then pcall(function() clickSound:Play() end) end
         local src = box.Text
         local fn,err = loadstring(src)
         if not fn then
@@ -16923,7 +17335,6 @@ local function setupLuaExecutor()
     end)
 
     clearBtn.MouseButton1Click:Connect(function()
-        if clickSound then pcall(function() clickSound:Play() end) end
         box.Text = ""
     end)
 end
