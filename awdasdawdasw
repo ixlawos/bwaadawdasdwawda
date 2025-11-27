@@ -15325,6 +15325,107 @@ teleportToTarget()
 end)
 
 --// 8 Buttons in Main Menu
+addMainMenuButton("TAMBAYAN [KALYE ONSE]", function()
+	local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+
+-- GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "CarDealerGUI"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+-- MAIN FRAME
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 230, 0, 170)
+frame.Position = UDim2.new(0.5, -115, 0.5, -85)
+frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 25)
+corner.Parent = frame
+
+local stroke = Instance.new("UIStroke")
+stroke.Thickness = 1
+stroke.Color = Color3.fromRGB(0,0,0)
+stroke.Transparency = 0.7
+stroke.Parent = frame
+
+------------------------------------------------------
+-- TITLE TEXT
+------------------------------------------------------
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 35)
+title.Position = UDim2.new(0, 0, 0, 5)
+title.BackgroundTransparency = 1
+title.Text = "MONSY SPAWN CAR"
+title.TextColor3 = Color3.fromRGB(0, 0, 0)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 20
+title.Parent = frame
+
+------------------------------------------------------
+-- FUNCTION TO MAKE BUTTONS
+------------------------------------------------------
+local function MakeTextButton(text, posY)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -20, 0, 40)
+    btn.Position = UDim2.new(0, 10, 0, posY)
+    btn.BackgroundTransparency = 1
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(0,0,0)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 18
+    btn.Parent = frame
+    return btn
+end
+
+------------------------------------------------------
+-- BUTTONS (Toyota Top, Sultan Bottom)
+------------------------------------------------------
+local btnToyota = MakeTextButton("Toyota Corolla", 50)
+local btnSultan = MakeTextButton("Sultan RS", 115)
+
+------------------------------------------------------
+-- BLACK DIVIDER LINE
+------------------------------------------------------
+local line = Instance.new("Frame")
+line.Size = UDim2.new(1, -50, 0, 2)
+line.Position = UDim2.new(0.5, -((frame.Size.X.Offset - 50)/2), 0, 95)
+line.BackgroundColor3 = Color3.fromRGB(0,0,0)
+line.Parent = frame
+
+------------------------------------------------------
+-- SPAWN FUNCTION
+------------------------------------------------------
+local function SpawnCar(name)
+    local args = {[1] = name}
+    game:GetService("ReplicatedStorage")
+        :WaitForChild("VehicleDealerSystem", 9e9)
+        :WaitForChild("Spawner", 9e9)
+        :WaitForChild("Functions", 9e9)
+        :WaitForChild("Spawn_Vehicle", 9e9)
+        :InvokeServer(unpack(args))
+end
+
+------------------------------------------------------
+-- CLICK EVENTS
+------------------------------------------------------
+btnToyota.MouseButton1Click:Connect(function()
+    SpawnCar("Toyata Corolla")
+end)
+
+btnSultan.MouseButton1Click:Connect(function()
+    SpawnCar("Sultan RS")
+end)
+end)
+
+--// 8 Buttons in Main Menu
 addMainMenuButton("ATM 1 D (KALYE ONSE)", function()
     -- LocalScript (put in StarterPlayerScripts)
 -- SPAM SOUND GUI with toggle (draggable, black, rounded corners)
