@@ -1,3 +1,4 @@
+
 local Players           = game:GetService("Players")
 local TweenService      = game:GetService("TweenService")
 local UserInputService  = game:GetService("UserInputService")
@@ -15325,7 +15326,7 @@ teleportToTarget()
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("TAMBAYAN [KALYE ONSE]", function()
+addMainMenuButton("POLICE DEPARTMENT JAIL [KALYE ONSE]", function()
 	local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 
@@ -15422,237 +15423,6 @@ end)
 
 btnSultan.MouseButton1Click:Connect(function()
     SpawnCar("Sultan RS")
-end)
-end)
-
---// 8 Buttons in Main Menu
-addMainMenuButton("ATM 1 D (KALYE ONSE)", function()
-    -- LocalScript (put in StarterPlayerScripts)
--- SPAM SOUND GUI with toggle (draggable, black, rounded corners)
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
-
--- UPDATED REMOTE (Your new system)
-local dropRemote = ReplicatedStorage:WaitForChild("DropRequest", 9e9)
-
--- GUI setup
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "SpamSoundGUI"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = playerGui
-
-local main = Instance.new("Frame")
-main.Name = "Main"
-main.Parent = screenGui
-main.Size = UDim2.new(0, 220, 0, 100)
-main.Position = UDim2.new(0.5, -110, 0.5, -50)
-main.BackgroundColor3 = Color3.fromRGB(255,255,255)
-main.Active = true
-main.AnchorPoint = Vector2.new(0.5, 0.5)
-
-local uicorner = Instance.new("UICorner", main)
-uicorner.CornerRadius = UDim.new(0, 12)
-
-local title = Instance.new("TextLabel")
-title.Parent = main
-title.Size = UDim2.new(1, 0, 0, 28)
-title.Position = UDim2.new(0, 0, 0, 6)
-title.BackgroundTransparency = 1
-title.Text = "SPAM DROP"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 16
-title.TextColor3 = Color3.fromRGB(0,0,0)
-
-local toggleBtn = Instance.new("TextButton")
-toggleBtn.Name = "Toggle"
-toggleBtn.Parent = main
-toggleBtn.Size = UDim2.new(0, 120, 0, 34)
-toggleBtn.Position = UDim2.new(0.5, -60, 0, 46)
-toggleBtn.BackgroundColor3 = Color3.fromRGB(255,255,255)
-toggleBtn.BorderSizePixel = 0
-toggleBtn.AutoButtonColor = true
-toggleBtn.Font = Enum.Font.Gotham
-toggleBtn.TextSize = 14
-toggleBtn.TextColor3 = Color3.fromRGB(0,0,0)
-toggleBtn.Text = "OFF"
-
-local toggleCorner = Instance.new("UICorner", toggleBtn)
-toggleCorner.CornerRadius = UDim.new(0, 10)
-
-local statusDot = Instance.new("Frame")
-statusDot.Name = "StatusDot"
-statusDot.Parent = toggleBtn
-statusDot.Size = UDim2.new(0, 12, 0, 12)
-statusDot.Position = UDim2.new(0, 8, 0.5, -6)
-statusDot.BackgroundColor3 = Color3.fromRGB(170,170,170)
-statusDot.BorderSizePixel = 0
-local dotCorner = Instance.new("UICorner", statusDot)
-dotCorner.CornerRadius = UDim.new(1, 0)
-
--- Draggable
-do
-	local dragging, dragStart, startPos
-	main.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			dragging = true
-			dragStart = input.Position
-			startPos = main.Position
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					dragging = false
-				end
-			end)
-		end
-	end)
-	main.InputChanged:Connect(function(input)
-		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-			local delta = input.Position - dragStart
-			main.Position = UDim2.new(
-				startPos.X.Scale,
-				startPos.X.Offset + delta.X,
-				startPos.Y.Scale,
-				startPos.Y.Offset + delta.Y
-			)
-		end
-	end)
-end
-
--- Spam logic
-local isOn = false
-local spamTask = nil
-
-local function startSpam()
-	if spamTask then return end
-	spamTask = task.spawn(function()
-		local args = {}
-		while isOn do
-			pcall(function()
-				dropRemote:FireServer(unpack(args))
-			end)
-			task.wait(0.001)
-		end
-		spamTask = nil
-	end)
-end
-
-local function stopSpam()
-	isOn = false
-end
-
-toggleBtn.MouseButton1Click:Connect(function()
-	if not isOn then
-		isOn = true
-		toggleBtn.Text = "ON"
-		statusDot.BackgroundColor3 = Color3.fromRGB(0,255,0)
-		startSpam()
-	else
-		stopSpam()
-		toggleBtn.Text = "OFF"
-		statusDot.BackgroundColor3 = Color3.fromRGB(170,170,170)
-	end
-end)
-end)
-
---// 8 Buttons in Main Menu
-addMainMenuButton("ATM 2 B (KALYE ONSE)", function()
-   -- LocalScript (put inside StarterPlayerScripts)
-
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
-
--- UPDATED REMOTE
-local comboRemote = ReplicatedStorage:WaitForChild("GiveCombo3", 9e9)
-
--- GUI
-local gui = Instance.new("ScreenGui")
-gui.Name = "AutoBuyGUI"
-gui.ResetOnSpawn = false
-gui.Parent = playerGui
-
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 230, 0, 110)
-frame.Position = UDim2.new(0.5, -115, 0.5, -55)
-frame.BackgroundColor3 = Color3.fromRGB(255,255,255)
-frame.Active = true
-frame.Draggable = true
-frame.Parent = gui
-
-local corner = Instance.new("UICorner", frame)
-corner.CornerRadius = UDim.new(0, 12)
-
-local title = Instance.new("TextLabel")
-title.Parent = frame
-title.Size = UDim2.new(1, 0, 0, 28)
-title.Position = UDim2.new(0, 0, 0, 6)
-title.BackgroundTransparency = 1
-title.Text = "AUTO BUY"
-title.Font = Enum.Font.GothamBold
-title.TextColor3 = Color3.fromRGB(0,0,0)
-title.TextSize = 16
-
-local toggle = Instance.new("TextButton")
-toggle.Parent = frame
-toggle.Size = UDim2.new(0, 120, 0, 36)
-toggle.Position = UDim2.new(0.5, -60, 0, 50)
-toggle.BackgroundColor3 = Color3.fromRGB(255,255,255)
-toggle.BorderSizePixel = 0
-toggle.Text = "OFF"
-toggle.Font = Enum.Font.Gotham
-toggle.TextSize = 14
-toggle.TextColor3 = Color3.fromRGB(0,0,0)
-
-local toggleCorner = Instance.new("UICorner", toggle)
-toggleCorner.CornerRadius = UDim.new(0, 10)
-
-local statusDot = Instance.new("Frame")
-statusDot.Parent = toggle
-statusDot.Size = UDim2.new(0, 12, 0, 12)
-statusDot.Position = UDim2.new(0, 8, 0.5, -6)
-statusDot.BackgroundColor3 = Color3.fromRGB(170,170,170)
-statusDot.BorderSizePixel = 0
-local statusCorner = Instance.new("UICorner", statusDot)
-statusCorner.CornerRadius = UDim.new(1, 0)
-
--- Logic
-local isOn = false
-local thread = nil
-
-local function startAuto()
-	if thread then return end
-	thread = task.spawn(function()
-		local args = {}
-		while isOn do
-			pcall(function()
-				comboRemote:FireServer(unpack(args))
-			end)
-			task.wait(0.001)
-		end
-		thread = nil
-	end)
-end
-
-local function stopAuto()
-	isOn = false
-end
-
-toggle.MouseButton1Click:Connect(function()
-	if not isOn then
-		isOn = true
-		toggle.Text = "ON"
-		statusDot.BackgroundColor3 = Color3.fromRGB(0,255,0)
-		startAuto()
-	else
-		stopAuto()
-		toggle.Text = "OFF"
-		statusDot.BackgroundColor3 = Color3.fromRGB(170,170,170)
-	end
 end)
 end)
 
@@ -15754,26 +15524,141 @@ end)
 
 --// 8 Buttons in Main Menu
 addMainMenuButton("TRAPHOUSE SMALL [KALYE ONSE]", function()
-    -- LocalScript (Client-Side)
+	local player = game.Players.LocalPlayer
+local pgui = player:WaitForChild("PlayerGui")
 
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
+local ScreenGui = Instance.new("ScreenGui")
+local Main = Instance.new("Frame")
+local Corner = Instance.new("UICorner")
+local Title = Instance.new("TextLabel")
 
--- Define the target position
-local targetPosition = Vector3.new(-421.8565673828125, 40.2863883972168, -262.322265625)
+-- SPAM
+local SpamLabel = Instance.new("TextLabel")
+local SpamToggle = Instance.new("TextButton")
+local SpamCircle = Instance.new("Frame")
 
--- Function to teleport the player immediately
-local function teleportToTarget()
-    -- Check if HumanoidRootPart exists and teleport immediately
-    if character and character:FindFirstChild("HumanoidRootPart") then
-        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))  -- Teleport to target position
+-- Line
+local Line = Instance.new("Frame")
+
+-- DEADZ
+local DeadzLabel = Instance.new("TextLabel")
+local DeadzToggle = Instance.new("TextButton")
+local DeadzCircle = Instance.new("Frame")
+
+ScreenGui.Parent = pgui
+ScreenGui.ResetOnSpawn = false
+
+-- Main (landscape + super compact)
+Main.Parent = ScreenGui
+Main.BackgroundColor3 = Color3.fromRGB(255,255,255)
+Main.Position = UDim2.new(0.02, 0, 0.35, 0)
+Main.Size = UDim2.new(0, 230, 0, 125)   -- konti pang liit
+Main.Active = true
+Main.Draggable = true
+
+Corner.CornerRadius = UDim.new(0, 18)
+Corner.Parent = Main
+
+-- Title
+Title.Parent = Main
+Title.BackgroundTransparency = 1
+Title.Size = UDim2.new(1,0,0,36)
+Title.Text = "DEAD CITY"
+Title.Font = Enum.Font.GothamBlack
+Title.TextColor3 = Color3.new(0,0,0)
+Title.TextSize = 19
+
+-- SPAM
+SpamLabel.Parent = Main
+SpamLabel.BackgroundTransparency = 1
+SpamLabel.Position = UDim2.new(0.08, 0, 0, 38)
+SpamLabel.Size = UDim2.new(0.45, 0, 0, 34)
+SpamLabel.Text = "SPAM"
+SpamLabel.Font = Enum.Font.GothamBold
+SpamLabel.TextColor3 = Color3.new(0,0,0)
+SpamLabel.TextSize = 17
+SpamLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+SpamToggle.Parent = Main
+SpamToggle.Position = UDim2.new(0.58, 0, 0, 46)
+SpamToggle.Size = UDim2.new(0, 48, 0, 24)   -- mas maliit na toggle
+SpamToggle.BackgroundColor3 = Color3.fromRGB(200,200,200)
+SpamToggle.Text = ""
+Instance.new("UICorner", SpamToggle).CornerRadius = UDim.new(1,0)
+
+SpamCircle.Parent = SpamToggle
+SpamCircle.Size = UDim2.new(0, 20, 0, 20)   -- mas cute na circle
+SpamCircle.Position = UDim2.new(0, 3, 0.5, -10)
+SpamCircle.BackgroundColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", SpamCircle).CornerRadius = UDim.new(1,0)
+
+-- Black Line
+Line.Parent = Main
+Line.BackgroundColor3 = Color3.new(0,0,0)
+Line.Position = UDim2.new(0.1, 0, 0, 75)
+Line.Size = UDim2.new(0.8, 0, 0, 1.5)
+
+-- DEADZ
+DeadzLabel.Parent = Main
+DeadzLabel.BackgroundTransparency = 1
+DeadzLabel.Position = UDim2.new(0.08, 0, 0, 82)
+DeadzLabel.Size = UDim2.new(0.45, 0, 0, 34)
+DeadzLabel.Text = "DEADZ"
+DeadzLabel.Font = Enum.Font.GothamBold
+DeadzLabel.TextColor3 = Color3.new(0,0,0)
+DeadzLabel.TextSize = 17
+DeadzLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+DeadzToggle.Parent = Main
+DeadzToggle.Position = UDim2.new(0.58, 0, 0, 90)
+DeadzToggle.Size = UDim2.new(0, 48, 0, 24)
+DeadzToggle.BackgroundColor3 = Color3.fromRGB(200,200,200)
+DeadzToggle.Text = ""
+Instance.new("UICorner", DeadzToggle).CornerRadius = UDim.new(1,0)
+
+DeadzCircle.Parent = DeadzToggle
+DeadzCircle.Size = UDim2.new(0, 20, 0, 20)
+DeadzCircle.Position = UDim2.new(0, 3, 0.5, -10)
+DeadzCircle.BackgroundColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", DeadzCircle).CornerRadius = UDim.new(1,0)
+
+-- Toggle Logic (0.001s + smooth)
+local spam = false
+local deadz = false
+
+SpamToggle.MouseButton1Click:Connect(function()
+    spam = not spam
+    if spam then
+        SpamToggle.BackgroundColor3 = Color3.fromRGB(0,255,0)
+        SpamCircle:TweenPosition(UDim2.new(1, -23, 0.5, -10), "Out", "Quad", 0.2, true)
+        task.spawn(function()
+            while spam do
+                game:GetService("ReplicatedStorage"):WaitForChild("GiveCombo3", 9e9):FireServer({})
+                task.wait(0.001)
+            end
+        end)
     else
-        print("Error: HumanoidRootPart missing.")
+        SpamToggle.BackgroundColor3 = Color3.fromRGB(200,200,200)
+        SpamCircle:TweenPosition(UDim2.new(0, 3, 0.5, -10), "Out", "Quad", 0.2, true)
     end
-end
+end)
 
--- Teleport as soon as the character is fully loaded
-teleportToTarget()
+DeadzToggle.MouseButton1Click:Connect(function()
+    deadz = not deadz
+    if deadz then
+        DeadzToggle.BackgroundColor3 = Color3.fromRGB(255,0,0)
+        DeadzCircle:TweenPosition(UDim2.new(1, -23, 0.5, -10), "Out", "Quad", 0.2, true)
+        task.spawn(function()
+            while deadz do
+                game:GetService("ReplicatedStorage"):WaitForChild("DropRequest", 9e9):FireServer({})
+                task.wait(0.001)
+            end
+        end)
+    else
+        DeadzToggle.BackgroundColor3 = Color3.fromRGB(200,200,200)
+        DeadzCircle:TweenPosition(UDim2.new(0, 3, 0.5, -10), "Out", "Quad", 0.2, true)
+    end
+end)
 end)
 
 --// 8 Buttons in Main Menu
