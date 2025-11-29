@@ -16693,7 +16693,6 @@ addMainMenuButton("ADMIN PANEL KICK ALL / SPAWN BTOOLS / TROLL / ADMIN GUN / SET
 local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
---// WHITELIST BY USERID (MAS SAFE)
 local whitelist = {
     [8172987891] = true,  
     [6226066651] = true,
@@ -16710,6 +16709,9 @@ local whitelist = {
 	[8174283950] = true,
 	[2860982002] = true,
 	[423338358] = true,
+    [7116363414] = true,
+    [7410409939] = true,
+    [4885856980] = true,
 	[3575675921] = true,
 	[7540853237] = true,
 	[560604146] = true,
@@ -16738,65 +16740,158 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("SPAWN BTOOLS (MONSY)", function()
-	local Players = game:GetService("Players")
-local player = Players.LocalPlayer  -- auto detect name
+addMainMenuButton("SPAWN BTOOLS (WHITLISTED ONLY)", function()
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local whitelist = {
+    [8172987891] = true,  
+    [6226066651] = true,
+	[9925586155] = true,
+	[6213315646] = true,  
+    [8625608074] = true,
+	[8708504286] = true,
+	[2757397228] = true,
+	[4602182711] = true,
+	[5804682562] = true,
+	[2577804945] = true,
+	[7761002961] = true,
+	[8970489737] = true,
+	[8174283950] = true,
+	[2860982002] = true,
+	[423338358] = true,
+    [7116363414] = true,
+    [7410409939] = true,
+    [4885856980] = true,
+	[3575675921] = true,
+	[7540853237] = true,
+	[560604146] = true,
+	[846984019] = true,
+    [player.UserId] = true -- OPTIONAL: auto allow self
+}
+
+if not whitelist[player.UserId] then
+	player:Kick("Whitelist only.")
+	return
+end
 
 local args = {
-    [1] = player.Name
+	[1] = player.Name
 }
 
 player:WaitForChild("PlayerGui", 9e9)
-    :WaitForChild("ExtraUI", 9e9)
-    :WaitForChild("AdminPanel", 9e9)
-    :WaitForChild("WeaponsFrame", 9e9)
-    :GetChildren()[7]
-    :WaitForChild("Event", 9e9)
-    :FireServer(unpack(args))
+	:WaitForChild("ExtraUI", 9e9)
+	:WaitForChild("AdminPanel", 9e9)
+	:WaitForChild("WeaponsFrame", 9e9)
+	:GetChildren()[7]
+	:WaitForChild("Event", 9e9)
+	:FireServer(unpack(args))
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("EXPLODE ALL (MONSY)", function()
-	local Players = game:GetService("Players")
+addMainMenuButton("EXPLODE ALL LOOP (WHITELISTED ONLY)", function()
+    local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
+local whitelist = {
+    [8172987891] = true,  
+    [6226066651] = true,
+	[9925586155] = true,
+	[6213315646] = true,  
+    [8625608074] = true,
+	[8708504286] = true,
+	[2757397228] = true,
+	[4602182711] = true,
+	[5804682562] = true,
+	[2577804945] = true,
+	[7761002961] = true,
+	[8970489737] = true,
+	[8174283950] = true,
+	[2860982002] = true,
+	[423338358] = true,
+    [7116363414] = true,
+    [7410409939] = true,
+    [4885856980] = true,
+	[3575675921] = true,
+	[7540853237] = true,
+	[560604146] = true,
+	[846984019] = true,
+    [player.UserId] = true -- OPTIONAL: auto allow self
+}
+
+if not whitelist[localPlayer.UserId] then
+	localPlayer:Kick("Whitelist only. Sorry po.")
+	return
+end
+
 while task.wait(0.01) do
-    for _, plr in pairs(Players:GetPlayers()) do
-        local args = {
-            [1] = plr.Name
-        }
+	for _, plr in pairs(Players:GetPlayers()) do
+		local args = {
+			[1] = plr.Name
+		}
 
-        local gui = localPlayer:WaitForChild("PlayerGui", 9e9)
-            :WaitForChild("ExtraUI", 9e9)
-            :WaitForChild("AdminPanel", 9e9)
-            :WaitForChild("TrollFrame", 9e9)
+		local gui = localPlayer:WaitForChild("PlayerGui", 9e9)
+			:WaitForChild("ExtraUI", 9e9)
+			:WaitForChild("AdminPanel", 9e9)
+			:WaitForChild("TrollFrame", 9e9)
 
-        gui:GetChildren()[7]
-            :WaitForChild("Event", 9e9)
-            :FireServer(unpack(args))
-    end
+		gui:GetChildren()[7]
+			:WaitForChild("Event", 9e9)
+			:FireServer(unpack(args))
+	end
 end
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("KICK ALL (MONSY)", function()
-	local Players = game:GetService("Players")
+addMainMenuButton("KICK ALL (WHITELISTED ONLY)", function()
+local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
+local whitelist = {
+    [8172987891] = true,  
+    [6226066651] = true,
+	[9925586155] = true,
+	[6213315646] = true,  
+    [8625608074] = true,
+	[8708504286] = true,
+	[2757397228] = true,
+	[4602182711] = true,
+	[5804682562] = true,
+	[2577804945] = true,
+	[7761002961] = true,
+	[8970489737] = true,
+	[8174283950] = true,
+	[2860982002] = true,
+	[423338358] = true,
+    [7116363414] = true,
+    [7410409939] = true,
+    [4885856980] = true,
+	[3575675921] = true,
+	[7540853237] = true,
+	[560604146] = true,
+	[846984019] = true,
+    [player.UserId] = true -- OPTIONAL: auto allow self
+}
+
+if not whitelist[localPlayer.UserId] then
+	localPlayer:Kick("Whitelist only.")
+	return
+end
+
 for _, plr in ipairs(Players:GetPlayers()) do
-    local args = {
-        [1] = plr.Name,
-        [2] = ""
-    }
+	local args = {
+		[1] = plr.Name,
+		[2] = ""
+	}
 
-    local gui = localPlayer:WaitForChild("PlayerGui", 9e9)
-        :WaitForChild("ExtraUI", 9e9)
-        :WaitForChild("AdminPanel", 9e9)
-        :WaitForChild("MainFrame", 9e9)
+	local gui = localPlayer:WaitForChild("PlayerGui", 9e9)
+		:WaitForChild("ExtraUI", 9e9)
+		:WaitForChild("AdminPanel", 9e9)
+		:WaitForChild("MainFrame", 9e9)
 
-    gui:GetChildren()[5]
-        :WaitForChild("Event", 9e9)
-        :FireServer(unpack(args))
+	gui:GetChildren()[5]
+		:WaitForChild("Event", 9e9)
+		:FireServer(unpack(args))
 end
 end)
 
@@ -17355,28 +17450,30 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
---// WHITELIST BY USERID (MAS SAFE)
 local whitelist = {
-    [8172987891] = true,
+    [8172987891] = true,  
     [6226066651] = true,
-    [9925586155] = true,
-    [6213315646] = true,
+	[9925586155] = true,
+	[6213315646] = true,  
     [8625608074] = true,
-    [8708504286] = true,
-    [2757397228] = true,
-    [4602182711] = true,
-    [5804682562] = true,
-    [2577804945] = true,
-    [7761002961] = true,
-    [8970489737] = true,
-    [8174283950] = true,
-    [846984019] = true,
-	[3575675921] = true,
-	[560604146] = true,
+	[8708504286] = true,
+	[2757397228] = true,
+	[4602182711] = true,
+	[5804682562] = true,
+	[2577804945] = true,
+	[7761002961] = true,
+	[8970489737] = true,
+	[8174283950] = true,
 	[2860982002] = true,
 	[423338358] = true,
+    [7116363414] = true,
+    [7410409939] = true,
+    [4885856980] = true,
+	[3575675921] = true,
 	[7540853237] = true,
-    [player.UserId] = true  -- Auto-include ang sarili mo (safe)
+	[560604146] = true,
+	[846984019] = true,
+    [player.UserId] = true -- OPTIONAL: auto allow self
 }
 
 --// CHECK IF WHITELISTED
