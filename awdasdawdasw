@@ -13986,7 +13986,7 @@ autoBuy.MouseButton1Click:Connect(function()
     if running and selectedItem then
         task.spawn(function()
             while running do
-                ReplicatedStorage:WaitForChild("BuyToolEvent"):FireServer(selectedItem, 1, "Kaizeuuu")
+                ReplicatedStorage:WaitForChild("BuyTbcItemEvent"):FireServer(selectedItem, 1, "Kaizeuuu")
                 task.wait(0.001)
             end
         end)
@@ -14430,7 +14430,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-local buyRemote = ReplicatedStorage:WaitForChild("BuyToolEvent")
+local buyRemote = ReplicatedStorage:WaitForChild("BuyTbcItemEvent")
 
 -- GUI
 local gui = Instance.new("ScreenGui")
