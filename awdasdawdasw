@@ -16738,7 +16738,7 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("SPAWN BTOOLS", function()
+addMainMenuButton("SPAWN BTOOLS (MONSY)", function()
 	local Players = game:GetService("Players")
 local player = Players.LocalPlayer  -- auto detect name
 
@@ -16756,28 +16756,30 @@ player:WaitForChild("PlayerGui", 9e9)
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("EXPLODE ALL", function()
+addMainMenuButton("EXPLODE ALL (MONSY)", function()
 	local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
-for _, plr in pairs(Players:GetPlayers()) do
-    local args = {
-        [1] = plr.Name
-    }
+while task.wait(0.01) do
+    for _, plr in pairs(Players:GetPlayers()) do
+        local args = {
+            [1] = plr.Name
+        }
 
-    local gui = localPlayer:WaitForChild("PlayerGui", 9e9)
-        :WaitForChild("ExtraUI", 9e9)
-        :WaitForChild("AdminPanel", 9e9)
-        :WaitForChild("TrollFrame", 9e9)
+        local gui = localPlayer:WaitForChild("PlayerGui", 9e9)
+            :WaitForChild("ExtraUI", 9e9)
+            :WaitForChild("AdminPanel", 9e9)
+            :WaitForChild("TrollFrame", 9e9)
 
-    gui:GetChildren()[7]
-        :WaitForChild("Event", 9e9)
-        :FireServer(unpack(args))
+        gui:GetChildren()[7]
+            :WaitForChild("Event", 9e9)
+            :FireServer(unpack(args))
+    end
 end
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("KICK ALL", function()
+addMainMenuButton("KICK ALL (MONSY)", function()
 	local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
