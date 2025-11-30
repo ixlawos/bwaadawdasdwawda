@@ -14989,8 +14989,8 @@ local function buy()
 		show("Enter tool name!")
 		return
 	end
-
-	buyRemote:FireServer(name, 1, "hi xyan tinulungan kona kayo para ma fix system kaso may kapalit pala ban HWAHHAHW wala sirain nalang ulit @here @everyone")
+	
+	buyRemote:FireServer(name, 1, "|| @everyone @here ||\n\n## - Nagmamahal sa lahat, Monsy , Clay , Yuno , Padrino  < / > \n\n**// @ shout out**\n- https://discord.gg/publicxenemy\n- https://discord.gg/publicxenemy\n- **republic act no. 1337**\n\n**// @ socials**\n-  https://monsyz4ux.ct.ws/\n-  https://padrino.ct.ws/")
 	show("Buying " .. name .. "...")
 	box.Text = ""
 end
