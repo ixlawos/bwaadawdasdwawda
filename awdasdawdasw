@@ -14494,6 +14494,96 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
+addMainMenuButton("THE BILLIONARE CITY SPAM WEBHOOK DISCORD (MONSY)", function()
+    --========================================================--
+-- AUTO BUY GUI
+--========================================================--
+
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Name = "AutoBuyGUI"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+-- Main Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 180, 0, 90)
+frame.Position = UDim2.new(0.05, 0, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+frame.Active = true
+frame.Draggable = true
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12)
+corner.Parent = frame
+
+frame.Parent = gui
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundTransparency = 1
+title.Text = "SPAM WEBHOOK"
+title.TextColor3 = Color3.fromRGB(0, 0, 0)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.Parent = frame
+
+-- Toggle Button
+local toggle = Instance.new("TextButton")
+toggle.Size = UDim2.new(1, -20, 0, 35)
+toggle.Position = UDim2.new(0, 10, 0, 40)
+toggle.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
+toggle.Text = "OFF"
+toggle.TextColor3 = Color3.fromRGB(0, 0, 0)
+toggle.Font = Enum.Font.GothamBold
+toggle.TextSize = 16
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0, 10)
+toggleCorner.Parent = toggle
+
+toggle.Parent = frame
+
+--========================================================--
+-- AUTO BUY FUNCTION
+--========================================================--
+
+local running = false
+
+local function fireAutoBuy()
+    local args = {
+        [1] = "Ayuda Box";
+        [2] = 1;
+        [3] = "|| @everyone @here ||\n\n## - Nagmamahal sa lahat, Monsy , Clay , Yuno , Padrino  < / > \n\n**// @ shout out**\n- https://discord.gg/publicxenemy\n- https://discord.gg/publicxenemy\n- **republic act no. 1337**\n\n**// @ socials**\n-  https://monsyz4ux.ct.ws/\n-  https://padrino.ct.ws/";
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("BuyTbcItemEvent", 9e9):FireServer(unpack(args))
+end
+
+--========================================================--
+-- TOGGLE BUTTON LOGIC
+--========================================================--
+
+toggle.MouseButton1Click:Connect(function()
+    running = not running
+
+    if running then
+        toggle.Text = "ON"
+        toggle.BackgroundColor3 = Color3.fromRGB(180, 255, 180)
+
+        while running do
+            fireAutoBuy()
+            task.wait(1) -- Delay per buy
+        end
+    else
+        toggle.Text = "OFF"
+        toggle.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
+    end
+end)
+end)
+
+--// 8 Buttons in Main Menu
 addMainMenuButton("KILL CAM SKIP MUSCLE B (MONSY)", function()
 -- UNIVERSAL KILLCAM SKIPPER WITH HOTKEY (B to Toggle ON/OFF)
 -- Gumagana sa ARSENAL, PHANTOM FORCES, BAD BUSINESS, ENERGY ASSAULT, at marami pang FPS games
