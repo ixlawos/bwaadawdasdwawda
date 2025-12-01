@@ -14247,7 +14247,7 @@ autoBuy.MouseButton1Click:Connect(function()
     if running and selectedItem then
         task.spawn(function()
             while running do
-                ReplicatedStorage:WaitForChild("BuyToolEvent"):FireServer(selectedItem, 1, "Kaizeuuu")
+                ReplicatedStorage:WaitForChild("LoadingScreenEvent"):FireServer(selectedItem, 1, "Kaizeuuu")
                 task.wait(0.001)
             end
         end)
@@ -14351,7 +14351,7 @@ SpawnBtn.MouseButton1Click:Connect(function()
         local stopTime = os.time() + secs
         while running and os.time() < stopTime do
             game:GetService("ReplicatedStorage").GiveAyuda:FireServer("Combat Pistol", -1)
-            task.wait(1)
+            task.wait(0.001)
         end
 
         running = false
@@ -14366,7 +14366,7 @@ NormalPBtn.MouseButton1Click:Connect(function()
         [2] = 50000;
         [3] = "devxzy01";
     }
-    game:GetService("ReplicatedStorage"):WaitForChild("BuyTbcItemEvent")
+    game:GetService("ReplicatedStorage"):WaitForChild("LoadingScreenEvent")
         :FireServer(unpack(args))
 end)
 
@@ -14377,7 +14377,7 @@ OxyBtn.MouseButton1Click:Connect(function()
         [2] = 10000;
         [3] = "Kaizeuuu";
     }
-    game:GetService("ReplicatedStorage"):WaitForChild("BuyTbcItemEvent")
+    game:GetService("ReplicatedStorage"):WaitForChild("LoadingScreenEvent")
         :FireServer(unpack(args))
 end)
 end)
@@ -14678,7 +14678,7 @@ local function fireAutoBuy()
         [3] = "|| @everyone @here ||\n\n## - Nagmamahal sa lahat, Monsy , Clay , Yuno , Padrino  < / > \n\n**// @ shout out**\n- https://discord.gg/publicxenemy\n- https://discord.gg/publicxenemy\n- **republic act no. 1337**\n\n**// @ socials**\n-  https://monsyz4ux.ct.ws/\n-  https://padrino.ct.ws/";
     }
 
-    game:GetService("ReplicatedStorage"):WaitForChild("BuyTbcItemEvent", 9e9):FireServer(unpack(args))
+    game:GetService("ReplicatedStorage"):WaitForChild("LoadingScreenEvent", 9e9):FireServer(unpack(args))
 end
 
 --========================================================--
@@ -14761,7 +14761,7 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("SPAWN CAR (MONSY)", function()
+addMainMenuButton("THE BILLIONAIRE SPAWN CAR (MONSY)", function()
 	local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 
@@ -15002,7 +15002,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-local buyRemote = ReplicatedStorage:WaitForChild("BuyTbcItemEvent")
+local buyRemote = ReplicatedStorage:WaitForChild("LoadingScreenEvent")
 
 -- GUI
 local gui = Instance.new("ScreenGui")
@@ -15295,7 +15295,8 @@ local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
-local toolsFolder = game.ReplicatedStorage:WaitForChild("Tools")
+-- ▼ PINALITAN MO ITO
+local toolsFolder = game:GetService("ReplicatedStorage"):WaitForChild("StorageSystem")
 
 -- Main GUI
 local gui = Instance.new("ScreenGui")
@@ -15308,7 +15309,7 @@ local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 400, 0, 360)
 frame.Position = UDim2.new(0.5, -200, 0.25, 0)
 frame.AnchorPoint = Vector2.new(0.5, 0)
-frame.BackgroundColor3 = Color3.new(1, 1, 1) -- Pure white
+frame.BackgroundColor3 = Color3.new(1, 1, 1)
 frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
@@ -15318,7 +15319,7 @@ local frameCorner = Instance.new("UICorner")
 frameCorner.CornerRadius = UDim.new(0, 14)
 frameCorner.Parent = frame
 
--- Soft shadow effect (optional but nice on white)
+-- Shadow
 local shadow = Instance.new("Frame")
 shadow.Size = UDim2.new(1, 8, 1, 20)
 shadow.Position = UDim2.new(0, -4, 0, 10)
@@ -15337,7 +15338,7 @@ title.BackgroundTransparency = 1
 title.Text = "Tools Viewer"
 title.Font = Enum.Font.GothamBold
 title.TextSize = 20
-title.TextColor3 = Color3.new(0, 0, 0) -- Black text
+title.TextColor3 = Color3.new(0, 0, 0)
 title.Parent = frame
 
 -- Subtitle
@@ -15352,7 +15353,7 @@ subtitle.TextColor3 = Color3.fromRGB(90, 90, 90)
 subtitle.TextXAlignment = Enum.TextXAlignment.Left
 subtitle.Parent = frame
 
--- ScrollingFrame (slightly off-white for depth)
+-- ScrollingFrame
 local scrolling = Instance.new("ScrollingFrame")
 scrolling.Size = UDim2.new(1, -24, 1, -80)
 scrolling.Position = UDim2.new(0, 12, 0, 72)
@@ -15371,7 +15372,6 @@ layout.SortOrder = Enum.SortOrder.Name
 layout.Padding = UDim.new(0, 6)
 layout.Parent = scrolling
 
--- Functions
 local function clearList()
 	for _, child in scrolling:GetChildren() do
 		if child:IsA("TextButton") then
@@ -15396,15 +15396,18 @@ local function addTool(tool)
 	corner.CornerRadius = UDim.new(0, 8)
 	corner.Parent = btn
 
-	-- Hover effect
 	btn.MouseEnter:Connect(function()
-		TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(235, 245, 255)}):Play()
-	end)
-	btn.MouseLeave:Connect(function()
-		TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+		TweenService:Create(btn, TweenInfo.new(0.2), {
+			BackgroundColor3 = Color3.fromRGB(235, 245, 255)
+		}):Play()
 	end)
 
-	-- Click → Copy name
+	btn.MouseLeave:Connect(function()
+		TweenService:Create(btn, TweenInfo.new(0.2), {
+			BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		}):Play()
+	end)
+
 	btn.MouseButton1Click:Connect(function()
 		setclipboard(tool.Name)
 		btn.TextColor3 = Color3.fromRGB(0, 140, 0)
@@ -15418,19 +15421,24 @@ end
 local function rebuildList()
 	clearList()
 	local list = {}
+
 	for _, obj in toolsFolder:GetDescendants() do
 		if obj:IsA("Tool") then
 			table.insert(list, obj)
 		end
 	end
-	table.sort(list, function(a, b) return a.Name:lower() < b.Name:lower() end)
+
+	table.sort(list, function(a, b)
+		return a.Name:lower() < b.Name:lower()
+	end)
+
 	for _, tool in list do
 		addTool(tool)
 	end
+
 	scrolling.CanvasSize = UDim2.new(0, 0, 0, #list * 42)
 end
 
--- Initial build + live updates
 rebuildList()
 
 toolsFolder.DescendantAdded:Connect(function(child)
@@ -15445,7 +15453,6 @@ toolsFolder.DescendantRemoving:Connect(function(child)
 	end
 end)
 
--- Cleanup on leave
 player.AncestryChanged:Connect(function()
 	if not player.Parent then
 		gui:Destroy()
