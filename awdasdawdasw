@@ -26,14 +26,15 @@ local divider, ring, fill, socialLine
 local allTabButtons = {}
 local allTabPanels = {}
 local currentTab = "MAIN MENU"
+local lastTab = "MAIN MENU"
 
 local currentTheme = "BLACK"
 
 local themes = {
 	BLACK = {
-		primary = Color3.fromRGB(255,255,255),
-		accent  = Color3.fromRGB(25,25,25),
-		bg      = Color3.fromRGB(0,0,0),
+		primary = Color3.fromRGB(255,255,255), -- White text
+		accent  = Color3.fromRGB(0,0,0),       -- Pure black
+		bg      = Color3.fromRGB(0,0,0),       -- Pure black
 	},
 
 	VIOLET = {
@@ -47,8 +48,6 @@ local themes = {
 		accent  = Color3.fromRGB(220,40,40),
 		bg      = Color3.fromRGB(80,0,0),
 	},
-
-	-- ⭐ NEW THEMES BELOW ⭐
 
 	BLUE = {
 		primary = Color3.fromRGB(255,255,255),
@@ -107,18 +106,16 @@ local function getThemeColors()
 	return t
 end
 
--- ✅ NEW: FULL THEME APPLY, INCLUDING BUTTONS / PLAYER LIST / EXECUTOR
 local function applyTheme()
 	if not screenGui then return end
 
 	local t = getThemeColors()
 	if not t then return end
 
-	-- useful derived colors
 	local accent      = t.accent or Color3.new(1,1,1)
-	local buttonBase  = t.bg:Lerp(accent, 0.32)  -- normal button bg
-	local buttonHover = t.bg:Lerp(accent, 0.50)  -- hover feel
-	local textboxBg   = t.bg:Lerp(accent, 0.12)  -- executor textbox, etc.
+	local buttonBase  = t.bg:Lerp(accent, 0.32)
+	local buttonHover = t.bg:Lerp(accent, 0.50)
+	local textboxBg   = t.bg:Lerp(accent, 0.12)
 
 	-- MAIN CONTAINERS
 	if main then main.BackgroundColor3 = t.bg end
@@ -127,50 +124,33 @@ local function applyTheme()
 	if bottomBar then bottomBar.BackgroundColor3 = t.bg end
 	if tabBar then tabBar.BackgroundColor3 = t.bg end
 
-	-- SPECIAL LINES / RINGS / SLIDER FILL
+	-- SPECIAL LINES / RINGS
 	if socialLine then socialLine.BackgroundColor3 = t.primary end
 	if divider then divider.BackgroundColor3 = t.primary end
 	if ring then ring.BackgroundColor3 = t.primary end
 	if fill then fill.BackgroundColor3 = accent end
 
-	-- TEXT (LABEL / BUTTON / TEXTBOX)
+	-- TEXT + BUTTON COLORING
 	for _, obj in ipairs(screenGui:GetDescendants()) do
 		if obj:IsA("TextLabel") or obj:IsA("TextBox") or obj:IsA("TextButton") then
 			obj.TextColor3 = t.primary
 		end
 	end
 
-	-- FRAMES + BUTTONS + TEXTBOX BG
 	for _, obj in ipairs(screenGui:GetDescendants()) do
-		if obj:IsA("Frame") then
-			-- skip core panels & special frames
-			if obj ~= main and obj ~= leftPanel and obj ~= rightPanel
-				and obj ~= bottomBar and obj ~= tabBar and obj ~= ring
-				and obj ~= fill and obj ~= socialLine then
-				obj.BackgroundColor3 = t.bg
-			end
-
+		if obj:IsA("Frame") and 
+		   obj ~= main and obj ~= leftPanel and obj ~= rightPanel and 
+		   obj ~= bottomBar and obj ~= tabBar and 
+		   obj ~= ring and obj ~= fill and obj ~= socialLine then
+			obj.BackgroundColor3 = t.bg
 		elseif obj:IsA("TextButton") then
-			-- basic style for ALL buttons (will override for active tab below)
 			obj.BackgroundColor3 = buttonBase
-
 		elseif obj:IsA("TextBox") then
 			obj.BackgroundColor3 = textboxBg
 		end
 	end
 
-	-- PLAYER LIST MINI BUTTONS (inside row frames)
-	for _, row in ipairs(screenGui:GetDescendants()) do
-		if row:IsA("Frame") and row:FindFirstChildOfClass("TextButton") then
-			for _, btn in ipairs(row:GetDescendants()) do
-				if btn:IsA("TextButton") then
-					btn.BackgroundColor3 = buttonBase
-				end
-			end
-		end
-	end
-
-	-- TAB BUTTON HIGHLIGHT (TOP + BOTTOM)
+	-- TAB BUTTON HIGHLIGHT
 	for _, btn in ipairs(allTabButtons) do
 		if currentTab == btn.Text then
 			btn.BackgroundColor3 = accent
@@ -193,9 +173,9 @@ screenGui = new("ScreenGui", {
 -- Main Frame
 main = new("Frame", {
 	Name = "MainFrame",
-	Size = UDim2.new(0, 860, 0, 520),
-	Position = UDim2.new(0.5, -430, 0.5, -260),
-	BackgroundColor3 = Color3.fromRGB(255,255,255), -- will be overridden by theme
+	Size = UDim2.new(0, 780, 0, 480),   -- SLIGHTLY BIGGER
+	Position = UDim2.new(0.5, -390, 0.5, -240), -- CENTER FIX
+	BackgroundColor3 = Color3.fromRGB(255,255,255),
 	BorderSizePixel = 0,
 	Parent = screenGui,
 })
@@ -227,19 +207,19 @@ new("TextLabel", {
 	BackgroundTransparency = 1,
 	Position = UDim2.new(0, 14, 0, 14),
 	Size = UDim2.new(1, -28, 0, 32),
-	Text = "MONSY MENU V2",
+	Text = "MONSY MENU VERSION 3",
 	Font = Enum.Font.GothamBlack,
-	TextSize = 25,
+	TextSize = 16,
 	TextColor3 = Color3.new(0,0,0),
 	TextXAlignment = Enum.TextXAlignment.Left,
 })
 
--- Avatar + Ring
+-- Avatar + Ring (Smaller Version)
 local avatarFrame = new("Frame", {
 	Parent = leftPanel,
 	BackgroundColor3 = Color3.fromRGB(255,255,255),
-	Size = UDim2.new(0, 100, 0, 100),
-	Position = UDim2.new(0.5, -50, 0, 60),
+	Size = UDim2.new(0, 80, 0, 80),       -- ↓ smaller avatar
+	Position = UDim2.new(0.5, -40, 0, 70), -- ↓ adjust position for smaller size
 	BorderSizePixel = 0,
 	ClipsDescendants = true,
 })
@@ -269,14 +249,15 @@ local avatar = new("ImageLabel", {
 })
 new("UICorner", {CornerRadius = UDim.new(1,0), Parent = avatar})
 
+-- Display Name Adjusted Lower
 new("TextLabel", {
 	Parent = leftPanel,
 	BackgroundTransparency = 1,
-	Position = UDim2.new(0, 0, 0, 170),
-	Size = UDim2.new(1, 0, 0, 28),
+	Position = UDim2.new(0, 0, 0, 165), -- moved UP slightly from original
+	Size = UDim2.new(1, 0, 0, 24),
 	Text = player.DisplayName,
 	Font = Enum.Font.GothamBold,
-	TextSize = 16,
+	TextSize = 15,
 	TextColor3 = Color3.new(0,0,0),
 	TextXAlignment = Enum.TextXAlignment.Center,
 })
@@ -284,11 +265,11 @@ new("TextLabel", {
 new("TextLabel", {
 	Parent = leftPanel,
 	BackgroundTransparency = 1,
-	Position = UDim2.new(0, 0, 0, 194),
-	Size = UDim2.new(1, 0, 0, 20),
+	Position = UDim2.new(0, 0, 0, 188), -- adjusted for spacing
+	Size = UDim2.new(1, 0, 0, 18),
 	Text = "@" .. player.Name,
 	Font = Enum.Font.Gotham,
-	TextSize = 13,
+	TextSize = 12,
 	TextColor3 = Color3.fromRGB(80,80,80),
 	TextXAlignment = Enum.TextXAlignment.Center,
 })
@@ -391,14 +372,17 @@ new("UICorner", {CornerRadius = UDim.new(0,12), Parent = bottomBar})
 -- TAB LOGIC
 ----------------------------------------------------------------
 local function showTab(name)
-	if currentTab == name then return end
 	if currentTab and allTabPanels[currentTab] then
 		allTabPanels[currentTab].Visible = false
 	end
+
 	currentTab = name
+	lastTab = name
+
 	if allTabPanels[name] then
 		allTabPanels[name].Visible = true
 	end
+
 	titleLabel.Text = name
 	applyTheme()
 end
@@ -429,16 +413,14 @@ local function createTopTab(name)
 	btn.MouseEnter:Connect(function()
 		if currentTab ~= name then
 			local t = getThemeColors()
-			local accent = t.accent or Color3.new(1,1,1)
-			local hover = t.bg:Lerp(accent, 0.50)
+			local hover = t.bg:Lerp(t.accent, 0.50)
 			TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = hover}):Play()
 		end
 	end)
 	btn.MouseLeave:Connect(function()
 		if currentTab ~= name then
 			local t = getThemeColors()
-			local accent = t.accent or Color3.new(1,1,1)
-			local base = t.bg:Lerp(accent, 0.32)
+			local base = t.bg:Lerp(t.accent, 0.32)
 			TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = base}):Play()
 		end
 	end)
@@ -486,7 +468,7 @@ local function createBottomTab(name)
 	})
 	new("UICorner", {CornerRadius = UDim.new(0,6), Parent = btn})
 
-	-- center calculation
+	-- center calc
 	local function positionButton()
 		local totalWidth = 3 * 140 + 2 * 16
 		local startX = (bottomBar.AbsoluteSize.X - totalWidth) / 2
@@ -521,18 +503,16 @@ for _, name in ipairs(bottomTabs) do
 	createBottomTab(name)
 end
 
--- DEFAULT: MAIN MENU
-if allTabButtons[1] then
-	allTabButtons[1].BackgroundColor3 = Color3.fromRGB(200,200,200)
-end
+-- DEFAULT TAB
 showTab("MAIN MENU")
 
 ----------------------------------------------------------------
--- MAIN MENU BUTTONS (UNLIMITED SCROLL)
+-- MAIN MENU BUTTONS
 ----------------------------------------------------------------
 local function addMainMenuButton(text, callback)
 	local panel = allTabPanels["MAIN MENU"]
 	if not panel then return end
+
 	local btn = new("TextButton", {
 		Size = UDim2.new(1, -16, 0, 38),
 		BackgroundColor3 = Color3.fromRGB(245,245,245),
@@ -547,14 +527,12 @@ local function addMainMenuButton(text, callback)
 
 	btn.MouseEnter:Connect(function()
 		local t = getThemeColors()
-		local accent = t.accent or Color3.new(1,1,1)
-		local hover = t.bg:Lerp(accent, 0.50)
+		local hover = t.bg:Lerp(t.accent, 0.50)
 		TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = hover}):Play()
 	end)
 	btn.MouseLeave:Connect(function()
 		local t = getThemeColors()
-		local accent = t.accent or Color3.new(1,1,1)
-		local base = t.bg:Lerp(accent, 0.32)
+		local base = t.bg:Lerp(t.accent, 0.32)
 		TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundColor3 = base}):Play()
 	end)
 
@@ -564,10 +542,10 @@ local function addMainMenuButton(text, callback)
 	end)
 end
 
---// 8 Buttons in Main Menu
+-- Example main menu button
 addMainMenuButton("INFINITE YIELD (MONSY)", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-end) 
+end)
 
 addMainMenuButton("MUSIC EXPLOITS (MONSY)", function()
 	-- PUBLIC ENEMY CMD - Minimal FE Audio Player (White Font Update)
@@ -14704,7 +14682,7 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("KILL CAM SKIP MUSCLE B (MONSY)", function()
+addMainMenuButton("THE BILLIONARE CITY KILL CAM SKIP MUSCLE B (MONSY)", function()
 -- UNIVERSAL KILLCAM SKIPPER WITH HOTKEY (B to Toggle ON/OFF)
 -- Gumagana sa ARSENAL, PHANTOM FORCES, BAD BUSINESS, ENERGY ASSAULT, at marami pang FPS games
 -- Automatic detect + destroy killcam GUI. Walang 5-sec animation! 🔥 (SILENT VERSION - WALANG PRINTS)
@@ -14761,7 +14739,7 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("THE BILLIONAIRE SPAWN CAR (MONSY)", function()
+addMainMenuButton("THE BILLIONARE CITY SPAWN CAR (MONSY)", function()
 	local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 
@@ -15129,6 +15107,132 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
+addMainMenuButton("THE BILLIONARE CITY GODMODE (BETA)", function()
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local oxyRemote = ReplicatedStorage:WaitForChild("OxyComplete")
+
+----------------------------------------------------------------
+-- GUI
+----------------------------------------------------------------
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "AutoOxyGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 250, 0, 130)
+frame.Position = UDim2.new(0.5, -125, 0.5, -60)
+frame.BackgroundColor3 = Color3.fromRGB(255,255,255)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.Parent = screenGui
+
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 15)
+
+local title = Instance.new("TextLabel")
+title.Parent = frame
+title.Size = UDim2.new(1, 0, 0, 40)
+title.BackgroundTransparency = 1
+title.Text = "GODMODE OXY"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 22
+title.TextColor3 = Color3.fromRGB(0,0,0) -- BLACK TEXT NOW
+
+----------------------------------------------------------------
+-- TOGGLE BUTTON
+----------------------------------------------------------------
+local toggle = Instance.new("TextButton")
+toggle.Parent = frame
+toggle.Size = UDim2.new(0, 200, 0, 50)
+toggle.Position = UDim2.new(0.5, -100, 0, 60)
+toggle.BackgroundColor3 = Color3.fromRGB(255,255,255)
+toggle.BorderSizePixel = 0
+toggle.Text = "OFF"
+toggle.Font = Enum.Font.GothamBold
+toggle.TextSize = 20
+toggle.TextColor3 = Color3.fromRGB(0,0,0) -- BLACK TEXT NOW
+
+Instance.new("UICorner", toggle).CornerRadius = UDim.new(0, 12)
+
+local dot = Instance.new("Frame")
+dot.Parent = toggle
+dot.Size = UDim2.new(0, 12, 0, 12)
+dot.Position = UDim2.new(0, 10, 0.5, -6)
+dot.BackgroundColor3 = Color3.fromRGB(170,170,170)
+dot.BorderSizePixel = 0
+Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
+
+----------------------------------------------------------------
+-- LOGIC
+----------------------------------------------------------------
+local isOn = false
+local thread = nil
+
+local function startOxy()
+	if thread then return end
+	thread = task.spawn(function()
+		while isOn do
+			pcall(function()
+				-- 5 FIRE IN ONE LOOP
+				for i = 1,50 do
+					oxyRemote:FireServer("APOY", -1)
+				end
+			end)
+			task.wait(0.0001)
+		end
+		thread = nil
+	end)
+end
+
+toggle.MouseButton1Click:Connect(function()
+	isOn = not isOn
+
+	toggle.Text = isOn and "ON" or "OFF"
+	toggle.TextColor3 = isOn and Color3.fromRGB(255,0,0) or Color3.fromRGB(0,0,0)
+
+	dot.BackgroundColor3 = isOn and Color3.fromRGB(255,0,0) or Color3.fromRGB(170,170,170)
+
+	if isOn then
+		startOxy()
+	end
+end)
+
+----------------------------------------------------------------
+-- DRAG
+----------------------------------------------------------------
+local dragging = false
+local dragStart, startPos
+
+frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = frame.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+frame.InputChanged:Connect(function(input)
+	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+		local delta = input.Position - dragStart
+		frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+end)
+end)
+
+--// 8 Buttons in Main Menu
 addMainMenuButton("THE BILLIONARE CITY SPAM SOUND (MONSY)", function()
     -- LocalScript (put in StarterPlayerScripts)
 -- SPAM SOUND GUI with toggle (draggable, black, rounded corners)
@@ -15287,7 +15391,7 @@ end)
 
 --// 8 Buttons in Main Menu
 addMainMenuButton("THE BILLIONAIRE CITY STORAGE SYSTEM", function()
-    -- LocalScript: Tools Viewer (White GUI + Black Text + Light Accents)
+-- LocalScript: Tools Viewer (White GUI + Black Text + Light Accents)
 -- Place in StarterPlayerScripts
 
 local Players = game:GetService("Players")
@@ -18096,7 +18200,7 @@ addLog("")
 end)
 
 ----------------------------------------------------------------
--- PLAYER LIST – LIGHT GRAY MINI BUTTONS
+-- PLAYER LIST
 ----------------------------------------------------------------
 local playerListPanel = allTabPanels["PLAYER LIST"]
 
@@ -18115,7 +18219,7 @@ local function refreshPlayers()
 			})
 			new("UICorner", {CornerRadius = UDim.new(0,6), Parent = row})
 
-			local nameLabel = new("TextLabel", {
+			new("TextLabel", {
 				Parent = row,
 				Size = UDim2.new(0.6, 0, 1, 0),
 				Position = UDim2.new(0, 8, 0, 0),
@@ -18184,11 +18288,10 @@ Players.PlayerAdded:Connect(refreshPlayers)
 Players.PlayerRemoving:Connect(refreshPlayers)
 
 ----------------------------------------------------------------
--- SETTINGS – WORKING
+-- SETTINGS
 ----------------------------------------------------------------
 local settingsPanel = allTabPanels["SETTINGS"]
 
--- Transparency slider
 local transLabel = new("TextLabel", {
 	Parent = settingsPanel,
 	Size = UDim2.new(1, 0, 0, 30),
@@ -18202,6 +18305,7 @@ local slider = new("Frame", {
 	Size = UDim2.new(1, 0, 0, 20),
 	BackgroundColor3 = Color3.fromRGB(245,245,245),
 })
+
 fill = new("Frame", {
 	Parent = slider,
 	Size = UDim2.new(0.5, 0, 1, 0),
@@ -18211,16 +18315,19 @@ new("UICorner", {CornerRadius = UDim.new(0,10), Parent = slider})
 new("UICorner", {CornerRadius = UDim.new(0,10), Parent = fill})
 
 local draggingSlider = false
+
 slider.InputBegan:Connect(function(i)
 	if i.UserInputType == Enum.UserInputType.MouseButton1 then
 		draggingSlider = true
 	end
 end)
+
 UserInputService.InputEnded:Connect(function(i)
 	if i.UserInputType == Enum.UserInputType.MouseButton1 then
 		draggingSlider = false
 	end
 end)
+
 UserInputService.InputChanged:Connect(function(i)
 	if draggingSlider and i.UserInputType == Enum.UserInputType.MouseMovement then
 		local p = math.clamp((i.Position.X - slider.AbsolutePosition.X) / slider.AbsoluteSize.X, 0, 1)
@@ -18238,8 +18345,10 @@ local keybindLabel = new("TextLabel", {
 	BackgroundTransparency = 1,
 	TextColor3 = Color3.new(0,0,0),
 })
+
 local toggleKey = Enum.KeyCode.RightControl
 local listening = false
+
 local keybindBtn = new("TextButton", {
 	Parent = settingsPanel,
 	Size = UDim2.new(1, 0, 0, 40),
@@ -18248,10 +18357,12 @@ local keybindBtn = new("TextButton", {
 	TextColor3 = Color3.new(0,0,0),
 })
 new("UICorner", {CornerRadius = UDim.new(0,6), Parent = keybindBtn})
+
 keybindBtn.MouseButton1Click:Connect(function()
 	listening = true
 	keybindBtn.Text = "Press any key..."
 end)
+
 UserInputService.InputBegan:Connect(function(i)
 	if listening and i.KeyCode ~= Enum.KeyCode.Unknown then
 		toggleKey = i.KeyCode
@@ -18287,14 +18398,13 @@ for name, _ in pairs(themes) do
 end
 
 ----------------------------------------------------------------
--- LUA EXECUTOR – LIGHT THEME TEXTBOX
+-- LUA EXECUTOR
 ----------------------------------------------------------------
 local executorPanel = allTabPanels["LUA EXECUTOR"]
 
 local execBtn = new("TextButton", {
 	Parent = executorPanel,
 	Size = UDim2.new(1, 0, 0, 40),
-	Position = UDim2.new(0, 0, 0, 0),
 	BackgroundColor3 = Color3.fromRGB(200,200,200),
 	Text = "EXECUTE",
 	TextColor3 = Color3.new(0,0,0),
@@ -18308,7 +18418,7 @@ local codeBox = new("TextBox", {
 	Size = UDim2.new(1, 0, 1, -50),
 	Position = UDim2.new(0, 0, 0, 50),
 	BackgroundColor3 = Color3.fromRGB(255,255,255),
-	Text = "-- Enter Lua script here\nprint('MONSY Executor Ready!')",
+	Text = "-- enter lua script here",
 	MultiLine = true,
 	TextColor3 = Color3.new(0,0,0),
 	Font = Enum.Font.Code,
@@ -18325,19 +18435,22 @@ execBtn.MouseButton1Click:Connect(function()
 end)
 
 ----------------------------------------------------------------
--- DRAGGABLE + TOGGLE
+-- DRAGGABLE WINDOW
 ----------------------------------------------------------------
 do
 	local draggingFrame, dragInput, dragStart, startPos
+
 	local function update(i)
 		local d = i.Position - dragStart
 		main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
 	end
+
 	main.InputBegan:Connect(function(i)
 		if i.UserInputType == Enum.UserInputType.MouseButton1 then
 			draggingFrame = true
 			dragStart = i.Position
 			startPos = main.Position
+
 			i.Changed:Connect(function()
 				if i.UserInputState == Enum.UserInputState.End then
 					draggingFrame = false
@@ -18345,11 +18458,13 @@ do
 			end)
 		end
 	end)
+
 	main.InputChanged:Connect(function(i)
 		if i.UserInputType == Enum.UserInputType.MouseMovement then
 			dragInput = i
 		end
 	end)
+
 	UserInputService.InputChanged:Connect(function(i)
 		if i == dragInput and draggingFrame then
 			update(i)
@@ -18357,15 +18472,34 @@ do
 	end)
 end
 
+----------------------------------------------------------------
+-- ⭐ ENHANCED GUI TOGGLE FIX ⭐
+----------------------------------------------------------------
 UserInputService.InputBegan:Connect(function(i, gp)
 	if gp then return end
 	if i.KeyCode == toggleKey then
+
+		-- Toggle visibility
 		screenGui.Enabled = not screenGui.Enabled
+
 		if screenGui.Enabled then
-			showTab("MAIN MENU")
+			-- Hide all panels first (fix invisible tab bug)
+			for name, panel in pairs(allTabPanels) do
+				panel.Visible = false
+			end
+
+			-- Restore last opened tab (enhanced)
+			if lastTab and allTabPanels[lastTab] then
+				showTab(lastTab)
+			else
+				showTab("MAIN MENU")
+			end
+
+			task.wait()
+			applyTheme() -- ensure colors update
 		end
 	end
 end)
 
--- Apply initial theme (ensures everything recolored)
+-- Initial theme apply
 applyTheme()
