@@ -14263,6 +14263,126 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
+addMainMenuButton("THE BILLIONARE CITY SPAWN CASH / GUN NOT DETECTED (NEW)", function()
+    --// GUI CREATION
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 260, 0, 230)
+Frame.Position = UDim2.new(0.5, -130, 0.5, -115)
+Frame.BackgroundColor3 = Color3.fromRGB(255,255,255)
+Frame.Active = true
+Frame.Draggable = true
+Frame.Parent = ScreenGui
+
+local FrameCorner = Instance.new("UICorner")
+FrameCorner.CornerRadius = UDim.new(0,15)
+FrameCorner.Parent = Frame
+
+-- TITLE (GRAFFITI-LIKE)
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 35)
+Title.BackgroundTransparency = 1
+Title.Text = "MONSY"
+Title.TextColor3 = Color3.fromRGB(0,0,0)
+Title.Font = Enum.Font.FredokaOne
+Title.TextSize = 26
+Title.Parent = Frame
+
+-- TEXTBOX
+local TimeBox = Instance.new("TextBox")
+TimeBox.Size = UDim2.new(0, 220, 0, 30)
+TimeBox.Position = UDim2.new(0, 20, 0, 45)
+TimeBox.BackgroundColor3 = Color3.fromRGB(255,255,255)
+TimeBox.TextColor3 = Color3.fromRGB(0,0,0)
+TimeBox.PlaceholderText = "Enter seconds (ex: 30)"
+TimeBox.Font = Enum.Font.GothamBold
+TimeBox.TextSize = 16
+TimeBox.Parent = Frame
+
+local BoxCorner = Instance.new("UICorner")
+BoxCorner.CornerRadius = UDim.new(0,10)
+BoxCorner.Parent = TimeBox
+
+-- BUTTON CREATOR
+local function createButton(name, y)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 220, 0, 30)
+    btn.Position = UDim2.new(0, 20, 0, y)
+    btn.BackgroundColor3 = Color3.fromRGB(255,255,255)
+    btn.TextColor3 = Color3.fromRGB(0,0,0)
+    btn.Text = name
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 16
+    btn.Parent = Frame
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0,10)
+    corner.Parent = btn
+
+    return btn
+end
+
+local SpawnBtn = createButton("SPAWN ON / OFF", 85)
+local NormalPBtn = createButton("NORMAL P", 130)
+local OxyBtn = createButton("OXY PILL", 175)
+
+-- AUTO STOP LOGIC
+local running = false
+
+SpawnBtn.MouseButton1Click:Connect(function()
+    if running then
+        running = false
+        SpawnBtn.Text = "SPAWN ON / OFF"
+        return
+    end
+
+    local secs = tonumber(TimeBox.Text)
+    if not secs then
+        TimeBox.Text = "INVALID"
+        return
+    end
+
+    running = true
+    SpawnBtn.Text = "RUNNING..."
+
+    task.spawn(function()
+        local stopTime = os.time() + secs
+        while running and os.time() < stopTime do
+            game:GetService("ReplicatedStorage").GiveAyuda:FireServer("Combat Pistol", -1)
+            task.wait(1)
+        end
+
+        running = false
+        SpawnBtn.Text = "SPAWN ON / OFF"
+    end)
+end)
+
+-- NORMAL P BUTTON
+NormalPBtn.MouseButton1Click:Connect(function()
+    local args = {
+        [1] = "Normal P";
+        [2] = 50000;
+        [3] = "devxzy01";
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("BuyTbcItemEvent")
+        :FireServer(unpack(args))
+end)
+
+-- OXY PILL BUTTON
+OxyBtn.MouseButton1Click:Connect(function()
+    local args = {
+        [1] = "Oxy pill";
+        [2] = 10000;
+        [3] = "Kaizeuuu";
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("BuyTbcItemEvent")
+        :FireServer(unpack(args))
+end)
+end)
+
+--// 8 Buttons in Main Menu
 addMainMenuButton("THE BILLIONARE CITY SPAWN CASH (MONSY)", function()
     -- LocalScript: MONEY GUI – Pure White + Black Text Only
 -- Place in StarterPlayerScripts
@@ -16798,7 +16918,10 @@ local whitelist = {
 	[8970489737] = true,
 	[8174283950] = true,
 	[2860982002] = true,
-	[423338358] = true,
+	[8456876972] = true,
+    [8797707488] = true,
+    [956682331] = true,
+    [423338358] = true,
     [7116363414] = true,
     [7410409939] = true,
     [4885856980] = true,
@@ -16849,7 +16972,10 @@ local whitelist = {
 	[8970489737] = true,
 	[8174283950] = true,
 	[2860982002] = true,
-	[423338358] = true,
+	[8456876972] = true,
+    [8797707488] = true,
+    [956682331] = true,
+    [423338358] = true,
     [7116363414] = true,
     [7410409939] = true,
     [4885856980] = true,
@@ -16898,7 +17024,10 @@ local whitelist = {
 	[8970489737] = true,
 	[8174283950] = true,
 	[2860982002] = true,
-	[423338358] = true,
+	[8456876972] = true,
+    [8797707488] = true,
+    [956682331] = true,
+    [423338358] = true,
     [7116363414] = true,
     [7410409939] = true,
     [4885856980] = true,
@@ -16952,7 +17081,10 @@ local whitelist = {
 	[8970489737] = true,
 	[8174283950] = true,
 	[2860982002] = true,
-	[423338358] = true,
+	[8456876972] = true,
+    [8797707488] = true,
+    [956682331] = true,
+    [423338358] = true,
     [7116363414] = true,
     [7410409939] = true,
     [4885856980] = true,
@@ -17555,7 +17687,10 @@ local whitelist = {
 	[8970489737] = true,
 	[8174283950] = true,
 	[2860982002] = true,
-	[423338358] = true,
+	[8456876972] = true,
+    [8797707488] = true,
+    [956682331] = true,
+    [423338358] = true,
     [7116363414] = true,
     [7410409939] = true,
     [4885856980] = true,
