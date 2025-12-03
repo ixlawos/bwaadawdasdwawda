@@ -17496,7 +17496,7 @@ addMainMenuButton("CLICK THIS TO SET THE SKY IF YOU HAVE BTOOLS IN YOUR INVENTOR
 				end
 			end
 		end
-		Sky("74397642722404")
+		Sky("92062079482012")
 
 -----------------------------------
 
@@ -17771,7 +17771,7 @@ local player = game.Players.LocalPlayer
 				end
 			end 
 		end
-		spam("74397642722404")
+		spam("92062079482012")
 
 -----------
 end)
