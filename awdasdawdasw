@@ -14093,6 +14093,31 @@ local function addMainMenuButton(text, callback)
 end
 
 --// 8 Buttons in Main Menu
+addMainMenuButton("THE BILLIONARE CITY CRASH SERVER (WHITELISTED ONLY)", function()
+	local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = game.CoreGui
+
+local Image = Instance.new("ImageLabel")
+Image.Size = UDim2.new(1,0,1,0)
+Image.Position = UDim2.new(0,0,0,0)
+Image.BackgroundTransparency = 1
+Image.Image = "rbxassetid://92062079482012"
+Image.ZIndex = 99999
+Image.Parent = ScreenGui
+
+task.delay(0.001, function()
+    player:Kick("PA WHITELIST KAMUNA BOI\n@: gg.publicxenemy\n@: xxxcxz")
+end)
+end)
+
+--// 8 Buttons in Main Menu
 addMainMenuButton("THE BILLIONARE CITY SPAWN GUN (MONSY)", function()
     local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -14509,86 +14534,12 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("THE BILLIONARE CITY REFRESH (MONSY)", function()
-	--// GUI Setup
-local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
-local UICorner = Instance.new("UICorner")
-local UIStroke = Instance.new("UIStroke")
-local Title = Instance.new("TextLabel")
-local SpawnButton = Instance.new("TextButton")
-local TPButton = Instance.new("TextButton")
-local RefreshButton = Instance.new("TextButton")
-local Drag = Instance.new("UIDragDetector")
-
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.ResetOnSpawn = false
-
-Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.fromRGB(255,255,255)
-Frame.Position = UDim2.new(0.4, 0, 0.4, 0)
-Frame.Size = UDim2.new(0, 200, 0, 180)
-
-UIStroke.Parent = Frame
-UIStroke.Color = Color3.fromRGB(0,0,0)
-UIStroke.Thickness = 2
-
-UICorner.Parent = Frame
-Drag.Parent = Frame
-
---// Title
-Title.Parent = Frame
-Title.BackgroundTransparency = 1
-Title.Text = "MONSY"
-Title.Size = UDim2.new(1,0,0,25)
-Title.Position = UDim2.new(0,0,0,0)
-Title.TextColor3 = Color3.fromRGB(0,0,0)
-Title.TextSize = 16
-Title.Font = Enum.Font.GothamBold
-
---// Button styling function
-local function MakeButton(btn, text, posY)
-    btn.Parent = Frame
-    btn.BackgroundColor3 = Color3.fromRGB(255,255,255)
-    btn.TextColor3 = Color3.fromRGB(0,0,0)
-    btn.Text = text
-    btn.Size = UDim2.new(0,180,0,35)
-    btn.Position = UDim2.new(0,10,0,posY)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 14 -- <<<<< MAS MALIIT NA TEXT
-    Instance.new("UICorner", btn)
-end
-
-MakeButton(SpawnButton, "SPAWN CAR", 30)
-MakeButton(TPButton, "TELEPORT", 75)
-MakeButton(RefreshButton, "REFRESH", 120)
-
---// SPAWN CAR FUNCTION
-SpawnButton.MouseButton1Click:Connect(function()
-    local args = {}
-    game:GetService("ReplicatedStorage"):WaitForChild("SpawnCarEvent", 9e9):FireServer(unpack(args))
-end)
-
---// TELEPORT FUNCTION
-local targetPosition = Vector3.new(-10.015, 5.02, 788.2)
-
-TPButton.MouseButton1Click:Connect(function()
-    local character = game.Players.LocalPlayer.Character
-    if character and character:FindFirstChild("HumanoidRootPart") then
-        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
-        print("Teleported!")
-    else
-        warn("HumanoidRootPart missing!")
-    end
-end)
-
---// REFRESH FUNCTION
-RefreshButton.MouseButton1Click:Connect(function()
-    local args = {
+addMainMenuButton("THE BILLIONARE CITY CLICK TO REFRESH (MONSY)", function()
+	local args = {
         [1] = "Male";
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("Morph", 9e9):FireServer(unpack(args))
-end)
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Morph", 9e9):FireServer(unpack(args))
 end)
 
 --// 8 Buttons in Main Menu
