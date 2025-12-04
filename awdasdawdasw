@@ -15180,7 +15180,7 @@ local function startOxy()
 		while isOn do
 			pcall(function()
 				-- 5 FIRE IN ONE LOOP
-				for i = 1,50 do
+				for i = 1,100 do
 					oxyRemote:FireServer("APOY", -1)
 				end
 			end)
@@ -15597,6 +15597,299 @@ local function addMainMenuButton(text, callback)
 		callback()
 	end)
 end
+
+--// 8 Buttons in Main Menu
+addMainMenuButton("-----------------------------THE BILLIONAIRE CITY-----------------------------", function()
+
+end)
+
+addMainMenuButton("HOSPITAL (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(-171.21885681152344, 3.0921545028686523, -80.4614028930664)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("WEST BARRIO BASE (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(-1251.2750244140625, 48.51205062866211, 49.710609436035156)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("CLOTHING (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(136.63233947753906, 3.637805938720703, -532.1862182617188)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("GUNSHOP (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(1039.8973388671875, 6.0305328369140625, 76.194091796875)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("FLEECA BANK (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(767.2047119140625, 4.561151027679443, -114.1823959350586)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("POLICE DEPARTMENT (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(518.1054077148438, 11.385021209716797, -561.5379028320312)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("PHARMACY (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(605.3427124023438, 5.316493988037109, 657.0101318359375)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("PINK CAGE STORAGE (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(-886.4883422851562, 28.266876220703125, 243.52357482910156)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("BEACH TAMBAYAN (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(57.73588943481445, -2.0903372764587402, -911.0687255859375)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("CAR DEALER (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(1042.940673828125, 4.098812103271484, 315.0807189941406)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("ATM BANK (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(1072.812744140625, 6.0305328369140625, 66.12694549560547)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("LIMEYS (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(79.9945068359375, 4.025745391845703, -357.07452392578125)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("SPOT FARM (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(739.0060424804688, 3.1494956016540527, 1130.69970703125)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("FISHING FARM (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(-380.8211669921875, 1.1302049160003662, -1418.327880859375)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("TRAPHOUSE MAIN TRIGGER (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(827.1415405273438, 34.8258056640625, -2407.6201171875)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
+
+addMainMenuButton("TRAPHOUSE SPOT 1 (TBC)", function()
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local targetPosition = Vector3.new(898.70947265625, 57.99732971191406, -2412.48193359375)
+
+local function teleportToTarget()
+    -- Check if HumanoidRootPart exists and teleport immediately
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+    else
+        print("Error: HumanoidRootPart missing.")
+    end
+end
+
+teleportToTarget()
+end)
 
 --// 8 Buttons in Main Menu
 addMainMenuButton("-----------------------------DOMINION-----------------------------", function()
