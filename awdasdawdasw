@@ -13235,6 +13235,144 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
+addMainMenuButton("PERSONAL SCRIPT TBC (VASCO)", function()
+	local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+
+local WhitelistedUsernames = {
+    "Gian_Hitsdiff",
+	"PeanutGaming_1",
+	"theyluvzmonsy",
+}
+
+if not table.find(WhitelistedUsernames, LocalPlayer.Name) then
+    return
+end
+
+for _, prompt in ipairs(Workspace:GetDescendants()) do
+    if prompt:IsA("ProximityPrompt") then
+        prompt.HoldDuration = 0
+        prompt.RequiresLineOfSight = false
+    end
+end
+
+Workspace.DescendantAdded:Connect(function(obj)
+    if obj:IsA("ProximityPrompt") then
+        obj.HoldDuration = 0
+        obj.RequiresLineOfSight = false
+    end
+end)
+
+local function getClosestFrontPrompt()
+    local char = LocalPlayer.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    local hrp = char.HumanoidRootPart
+    local closest = nil
+    local closestDist = math.huge
+    local lookVector = hrp.CFrame.LookVector
+
+    for _, prompt in ipairs(Workspace:GetDescendants()) do
+        if prompt:IsA("ProximityPrompt") and prompt.Enabled then
+            local part = prompt.Parent
+            if part and part:IsA("BasePart") then
+                local dist = (part.Position - hrp.Position).Magnitude
+                if dist <= prompt.MaxActivationDistance then
+                    local dir = (part.Position - hrp.Position).Unit
+                    if lookVector:Dot(dir) > 0.75 and dist < closestDist then
+                        closestDist = dist
+                        closest = prompt
+                    end
+                end
+            end
+        end
+    end
+    return closest
+end
+
+UserInputService.InputBegan:Connect(function(input, gp)
+    if gp then return end
+    if input.KeyCode == Enum.KeyCode.E then
+        local prompt = getClosestFrontPrompt()
+        if prompt then
+            fireproximityprompt(prompt)
+        end
+    end
+end)
+
+local playerGui = LocalPlayer:WaitForChild("PlayerGui")
+local gui = Instance.new("ScreenGui")
+gui.Name = "MongaTong_Black"
+gui.ResetOnSpawn = false
+gui.Parent = playerGui
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 170, 0, 90)
+frame.Position = UDim2.new(0.38, 0, 0.35, 0)
+frame.BackgroundColor3 = Color3.new(0, 0, 0)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+
+local corner = Instance.new("UICorner", frame)
+corner.CornerRadius = UDim.new(0, 14)
+
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 28)
+title.BackgroundTransparency = 1
+title.Text = "MONSY BYPASS"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.Font = Enum.Font.GothamBlack
+title.TextSize = 18
+
+local toggle = Instance.new("TextButton", frame)
+toggle.Size = UDim2.new(0.8, 0, 0, 35)
+toggle.Position = UDim2.new(0.1, 0, 0.45, 0)
+toggle.BackgroundColor3 = Color3.new(0, 0, 0)
+toggle.TextColor3 = Color3.new(1, 1, 1)
+toggle.Text = "OFF"
+toggle.Font = Enum.Font.GothamBold
+toggle.TextSize = 18
+
+local toggleCorner = Instance.new("UICorner", toggle)
+toggleCorner.CornerRadius = UDim.new(0, 12)
+
+local glow = Instance.new("UIStroke", toggle)
+glow.Color = Color3.fromRGB(0, 255, 0)
+glow.Thickness = 3
+glow.Enabled = false
+
+local running = false
+
+local CleanFolder = Workspace:WaitForChild("CommunityServiceArea"):WaitForChild("CleanFolder")
+
+task.spawn(function()
+    while task.wait(0.001) do
+        if running then
+            for _, obj in ipairs(CleanFolder:GetChildren()) do
+                local prompt = obj:FindFirstChildOfClass("ProximityPrompt")
+                if prompt then
+                    pcall(fireproximityprompt, prompt)
+                end
+            end
+        end
+    end
+end)
+
+toggle.MouseButton1Click:Connect(function()
+    running = not running
+    if running then
+        toggle.Text = "ON"
+        glow.Enabled = true
+    else
+        toggle.Text = "OFF"
+        glow.Enabled = false
+    end
+end)
+end)
+
+--// 8 Buttons in Main Menu
 addMainMenuButton("CASH DROP (MONSY)", function()
 	-- PUBLIC ENEMY CASH DROP — FULL WHITE THEME + BLACK TEXT
 -- Mas maliit, mas malinis, zero dark elements
