@@ -11110,6 +11110,134 @@ end)
 end)
 
 --// 4 Buttons in Roleplay Script
+addMainMenuButton("ESP STROKE WHITE MUSCLE E TO ON/OFF (NEW)", function()
+	local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+local LocalPlayer = Players.LocalPlayer
+local espEnabled = true
+
+local TAG_NAME = "MONSY_TAG"
+local HL_NAME = "MONSY_ESP"
+
+local function ensureESP(char)
+	if not char or char:FindFirstChild(HL_NAME) then return end
+
+	local hl = Instance.new("Highlight")
+	hl.Name = HL_NAME
+	hl.Adornee = char
+	hl.FillTransparency = 1
+	hl.OutlineColor = Color3.new(1, 1, 1)
+	hl.OutlineTransparency = 0
+	hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+	hl.Parent = char
+end
+
+local function ensureTag(char)
+	if not char then return end
+	local head = char:FindFirstChild("Head")
+	if not head then return end
+	if head:FindFirstChild(TAG_NAME) then return end
+
+	local bb = Instance.new("BillboardGui")
+	bb.Name = TAG_NAME
+	bb.Adornee = head
+	bb.Size = UDim2.new(0, 40, 0, 20) -- mas maliit
+	bb.StudsOffset = Vector3.new(0, 2.2, 0)
+	bb.AlwaysOnTop = true
+	bb.Parent = head
+
+	local tl = Instance.new("TextLabel")
+	tl.BackgroundTransparency = 1
+	tl.Size = UDim2.new(1, 0, 1, 0)
+	tl.Text = "x"
+	tl.TextColor3 = Color3.new(1, 1, 1)
+	tl.TextStrokeTransparency = 0
+	tl.TextScaled = false
+	tl.TextSize = 14 -- ✅ liliit/lalaki dito (try 12-16)
+	tl.Font = Enum.Font.GothamBold
+	tl.Parent = bb
+end
+
+
+local function removeESP(char)
+	local hl = char and char:FindFirstChild(HL_NAME)
+	if hl then hl:Destroy() end
+end
+
+local function removeTag(char)
+	if not char then return end
+	local head = char:FindFirstChild("Head")
+	if not head then return end
+	local bb = head:FindFirstChild(TAG_NAME)
+	if bb then bb:Destroy() end
+end
+
+local function applyForPlayer(plr)
+	if plr == LocalPlayer then return end
+	local char = plr.Character
+	if not char then return end
+
+	-- wait for head to exist
+	char:WaitForChild("Head", 5)
+
+	if espEnabled then
+		ensureESP(char)
+		ensureTag(char)
+	else
+		removeESP(char)
+		removeTag(char)
+	end
+end
+
+local function hookPlayer(plr)
+	if plr == LocalPlayer then return end
+
+	if plr.Character then
+		applyForPlayer(plr)
+	end
+
+	plr.CharacterAdded:Connect(function()
+		task.wait(0.15)
+		applyForPlayer(plr)
+	end)
+end
+
+local function refreshAll()
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if plr ~= LocalPlayer then
+			applyForPlayer(plr)
+		end
+	end
+end
+
+-- Hook players
+for _, plr in ipairs(Players:GetPlayers()) do
+	hookPlayer(plr)
+end
+Players.PlayerAdded:Connect(hookPlayer)
+Players.PlayerRemoving:Connect(function(plr)
+	if plr ~= LocalPlayer and plr.Character then
+		removeESP(plr.Character)
+		removeTag(plr.Character)
+	end
+end)
+
+-- Keybind: E toggle
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if input.KeyCode == Enum.KeyCode.E then
+		espEnabled = not espEnabled
+		refreshAll()
+		warn("ESP+TAG:", espEnabled and "ON" or "OFF")
+	end
+end)
+
+-- initial apply
+refreshAll()
+end)
+
+--// 4 Buttons in Roleplay Script
 addMainMenuButton("USERNAME COPIER (MONSY)", function()
 	-- Sleek Black Player Scanner GUI (Medium Version with Smooth Refresh Animation)
 -- All-black draggable GUI listing player usernames. Click to copy username.
