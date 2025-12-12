@@ -13538,15 +13538,14 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("PERSONAL SCRIPT TBC (VASCO)", function()
+addMainMenuButton("SOLIS ROLEPLAY (MONSY)", function()
 	local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 local LocalPlayer = Players.LocalPlayer
 
 local WhitelistedUsernames = {
-    "Gian_Hitsdiff",
-	"PeanutGaming_1",
+    "LazySairo",
 	"theyluvzmonsy",
 }
 
