@@ -13538,14 +13538,15 @@ end)
 end)
 
 --// 8 Buttons in Main Menu
-addMainMenuButton("SOLIS ROLEPLAY (MONSY)", function()
+addMainMenuButton("PERSONAL SCRIPT TBC (VASCO)", function()
 	local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 local LocalPlayer = Players.LocalPlayer
 
 local WhitelistedUsernames = {
-    "LazySairo",
+    "Gian_Hitsdiff",
+	"PeanutGaming_1",
 	"theyluvzmonsy",
 }
 
@@ -15131,9 +15132,7 @@ end)
 
 --// 8 Buttons in Main Menu
 addMainMenuButton("THE BILLIONARE CITY SPAWN CAR (MONSY)", function()
-	local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-
+local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 -- GUI
@@ -15142,72 +15141,71 @@ gui.Name = "CarDealerGUI"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- MAIN FRAME
+-- MAIN FRAME (pinaliit konti)
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 230, 0, 170)
-frame.Position = UDim2.new(0.5, -115, 0.5, -85)
+frame.Size = UDim2.new(0, 230, 0, 300)  -- mas maliit at mas mataas para sa 5 buttons
+frame.Position = UDim2.new(0.5, -100, 0.5, -140)
 frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 frame.Active = true
 frame.Draggable = true
 frame.Parent = gui
 
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 25)
+corner.CornerRadius = UDim.new(0, 20)
 corner.Parent = frame
 
 local stroke = Instance.new("UIStroke")
-stroke.Thickness = 1
-stroke.Color = Color3.fromRGB(0,0,0)
-stroke.Transparency = 0.7
+stroke.Thickness = 2
+stroke.Color = Color3.fromRGB(0, 0, 0)
+stroke.Transparency = 0.6
 stroke.Parent = frame
 
-------------------------------------------------------
--- TITLE TEXT
-------------------------------------------------------
+-- TITLE
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 35)
-title.Position = UDim2.new(0, 0, 0, 5)
+title.Size = UDim2.new(1, 0, 0, 40)
 title.BackgroundTransparency = 1
 title.Text = "MONSY SPAWN CAR"
 title.TextColor3 = Color3.fromRGB(0, 0, 0)
 title.Font = Enum.Font.GothamBold
-title.TextSize = 20
+title.TextSize = 22
 title.Parent = frame
 
-------------------------------------------------------
--- FUNCTION TO MAKE BUTTONS
-------------------------------------------------------
-local function MakeTextButton(text, posY)
+-- FUNCTION TO MAKE BUTTONS (may background na at hover effect)
+local function MakeButton(text, positionY)
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, -20, 0, 40)
-    btn.Position = UDim2.new(0, 10, 0, posY)
-    btn.BackgroundTransparency = 1
+    btn.Position = UDim2.new(0, 10, 0, positionY)
+    btn.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
     btn.Text = text
-    btn.TextColor3 = Color3.fromRGB(0,0,0)
+    btn.TextColor3 = Color3.fromRGB(0, 0, 0)
     btn.Font = Enum.Font.GothamBold
     btn.TextSize = 18
+    btn.AutoButtonColor = false  -- para manual natin kontrolin ang hover
     btn.Parent = frame
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 10)
+    btnCorner.Parent = btn
+    
+    -- Hover effect
+    btn.MouseEnter:Connect(function()
+        btn.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
+    end)
+    btn.MouseLeave:Connect(function()
+        btn.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+    end)
+    
     return btn
 end
 
-------------------------------------------------------
--- BUTTONS (Toyota Top, Sultan Bottom)
-------------------------------------------------------
-local btnToyota = MakeTextButton("Toyota Corolla", 50)
-local btnSultan = MakeTextButton("Sultan RS", 115)
+-- CREATE 5 BUTTONS (pantay ang spacing)
+local btnToyota   = MakeButton("Toyata Corolla", 50)
+local btnFusion   = MakeButton("Fusion", 100)
+local btnCharger  = MakeButton("Charger", 150)
+local btnCaprice  = MakeButton("Caprice", 200)
+local btnSultan   = MakeButton("Sultan RS", 250)
 
-------------------------------------------------------
--- BLACK DIVIDER LINE
-------------------------------------------------------
-local line = Instance.new("Frame")
-line.Size = UDim2.new(1, -50, 0, 2)
-line.Position = UDim2.new(0.5, -((frame.Size.X.Offset - 50)/2), 0, 95)
-line.BackgroundColor3 = Color3.fromRGB(0,0,0)
-line.Parent = frame
-
-------------------------------------------------------
 -- SPAWN FUNCTION
-------------------------------------------------------
 local function SpawnCar(name)
     local args = {[1] = name}
     game:GetService("ReplicatedStorage")
@@ -15218,11 +15216,21 @@ local function SpawnCar(name)
         :InvokeServer(unpack(args))
 end
 
-------------------------------------------------------
 -- CLICK EVENTS
-------------------------------------------------------
 btnToyota.MouseButton1Click:Connect(function()
-    SpawnCar("Toyata Corolla")
+    SpawnCar("Toyata Corolla")  -- inayos ang typo
+end)
+
+btnFusion.MouseButton1Click:Connect(function()
+    SpawnCar("Fusion")
+end)
+
+btnCharger.MouseButton1Click:Connect(function()
+    SpawnCar("Charger")
+end)
+
+btnCaprice.MouseButton1Click:Connect(function()
+    SpawnCar("Caprice")
 end)
 
 btnSultan.MouseButton1Click:Connect(function()
@@ -17702,8 +17710,7 @@ local whitelist = {
     [8172987891] = true,  
     [6226066651] = true,
 	[9925586155] = true,
-	[6213315646] = true,
-	[7051448821] = true,  
+	[6213315646] = true,  
     [8625608074] = true,
 	[8708504286] = true,
 	[2757397228] = true,
@@ -17713,6 +17720,7 @@ local whitelist = {
 	[7761002961] = true,
 	[8970489737] = true,
 	[8174283950] = true,
+	[9396953751] = true,
 	[2860982002] = true,
 	[8456876972] = true,
     [8797707488] = true,
@@ -17770,12 +17778,12 @@ local whitelist = {
 	[7761002961] = true,
 	[8970489737] = true,
 	[8174283950] = true,
-	[7051448821] = true,
 	[2860982002] = true,
 	[8456876972] = true,
     [8797707488] = true,
     [956682331] = true,
     [423338358] = true,
+	[9396953751] = true,
     [7116363414] = true,
     [7410409939] = true,
     [4885856980] = true,
@@ -17819,7 +17827,6 @@ local whitelist = {
 	[6213315646] = true,  
     [8625608074] = true,
 	[8708504286] = true,
-	[7051448821] = true,
 	[2757397228] = true,
 	[4602182711] = true,
 	[5804682562] = true,
@@ -17831,6 +17838,7 @@ local whitelist = {
 	[8456876972] = true,
     [8797707488] = true,
     [956682331] = true,
+	[9396953751] = true,
     [423338358] = true,
     [7116363414] = true,
     [7410409939] = true,
@@ -17879,7 +17887,6 @@ local whitelist = {
 	[9925586155] = true,
 	[6213315646] = true,  
     [8625608074] = true,
-	[7051448821] = true,
 	[8708504286] = true,
 	[2757397228] = true,
 	[4602182711] = true,
@@ -17893,6 +17900,7 @@ local whitelist = {
     [8797707488] = true,
     [956682331] = true,
     [423338358] = true,
+	[9396953751] = true,
     [7116363414] = true,
     [7410409939] = true,
     [4885856980] = true,
@@ -18493,7 +18501,6 @@ local whitelist = {
 	[2757397228] = true,
 	[4602182711] = true,
 	[5804682562] = true,
-	[7051448821] = true,
 	[2577804945] = true,
 	[7761002961] = true,
 	[8970489737] = true,
@@ -18503,6 +18510,7 @@ local whitelist = {
     [8797707488] = true,
     [956682331] = true,
     [423338358] = true,
+	[9396953751] = true,
     [7116363414] = true,
     [7410409939] = true,
     [4885856980] = true,
